@@ -1,0 +1,8 @@
+@startuml
+class Account {
+    - name: String
+    - password: String
+
+}
+
+@enduml
