@@ -5,12 +5,10 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import tlcm.website.thebrewery.converter.ResultSetToUserConverter;
 import tlcm.website.thebrewery.object.User;
+import tlcm.website.thebrewery.object.UserType;
 
 import javax.servlet.http.HttpServletRequest;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import java.sql.*;
 
 @Controller
 @RequestMapping(value = "account")
@@ -21,10 +19,29 @@ public class Account {
         return "account";
     }
 
-    @PutMapping(value = "register")
-    public String register() {
+    @PostMapping(value = "register")
+    public String register(@ModelAttribute(value = "new_user") User user,
+                           HttpServletRequest request) {
 
-        return "redirect:/account";
+        final String username = "root";
+        final String password = "password";
+
+        try(Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/brewery", username, password)) {
+            String sql = "INSERT INTO users(user_type, first_name, last_name, username, password) VALUES(?, ?, ?, ?, ?)";
+            PreparedStatement st = conn.prepareStatement(sql);
+            st.setString(1, UserType.USER.toString());
+            st.setString(2, user.getFirstName());
+            st.setString(3, user.getLastName());
+            st.setString(4, user.getUsername());
+            st.setString(5, user.getPassword());
+
+            st.execute();
+        } catch(SQLException e) {
+            return "redirect:/error";
+        }
+
+        request.getSession().setAttribute("current_user", user);
+        return "redirect:/";
     }
 
     @RequestMapping(value = "login")
@@ -35,27 +52,29 @@ public class Account {
     }
 
     @PostMapping(value = "login/verify")
-    public String loginVerify(@ModelAttribute(value="current_user") User user,
+    public String loginVerify(@ModelAttribute(value = "current_user") User user,
                               HttpServletRequest request) {
         final String username = "root";
         final String password = "password";
 
-        try(Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/users", username, password)) {
+        try(Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/brewery", username, password)) {
 
-            PreparedStatement st = conn.prepareStatement("SELECT username, password FROM users WHERE username = ? AND password = ?");
+            PreparedStatement st = conn.prepareStatement("SELECT * FROM users WHERE username = ? AND password = ?");
             st.setString(1, user.getUsername());
             st.setString(2, user.getPassword());
 
-
             ResultSetToUserConverter converter = new ResultSetToUserConverter(st.executeQuery());
+
             User userToLogin = converter.convert();
             if(!user.equals(userToLogin)) {
                 return "redirect:/login?result=false";
             }
-        } catch(SQLException e){
-            e.getSQLState();
-        }
-        return null;
-    }
 
+            request.getSession().setAttribute("current_user", userToLogin);
+
+        } catch(SQLException e) {
+            return "redirect:/error";
+        }
+        return "redirect:/";
+    }
 }

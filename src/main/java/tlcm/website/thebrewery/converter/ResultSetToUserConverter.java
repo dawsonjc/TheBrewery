@@ -6,19 +6,24 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class ResultSetToUserConverter {
-    private final ResultSet set;
+    private ResultSet set;
     public ResultSetToUserConverter(ResultSet set) {
         this.set = set;
     }
 
     public User convert() {
-        User user = new User();
+        User user = null;
         try {
-            user.setId(set.getString("id"));
-            user.setFirstName(set.getString("first_name"));
+            this.set.next();
 
-        } catch(SQLException ignore) {}
-
+            user = User.builder()
+                    .withId(this.set.getInt(2))
+                    .withFirstName(this.set.getString(3))
+                    .withLastName(this.set.getString(4))
+                    .withUsername(this.set.getString(5))
+                    .withPassword(this.set.getString(6))
+                    .build();
+        } catch(SQLException ignore) { }
         return user;
     }
 }

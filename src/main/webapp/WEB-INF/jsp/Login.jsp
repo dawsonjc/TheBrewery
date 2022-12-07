@@ -1,17 +1,17 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+
+
+
 <html>
 <% String title = "Login"; %>
 <%@ include file="header.jsp" %>
-<body>
-    <script type="text/javascript">
 
-    </script>
+<body>
     <div class="container">
-        <div class="row"></div>
         <div class="row">
             <div class="col-md-6">
                 <h3>Login</h3>
-                <form:form action="${pageContext.request.contextPath}/account/login/verify" method="POST" modelAttribute="current_user">
+                <form:form action="${pageContext.request.contextPath}/account/login/verify" method="post" modelAttribute="current_user">
                     <form:label path="username">Username</form:label>
                     <form:input path="username" type="text" placeholder="username" />
                     <br/>
@@ -23,7 +23,7 @@
             </div>
             <div class="col-md-6">
                 <h3>Register</h3>
-                <form:form action="${pageContext.request.contextPath}/account/register" method="POST" modelAttribute="new_user">
+                <form:form action="${pageContext.request.contextPath}/account/register" method="post" modelAttribute="new_user">
                     <form:label path="firstName">First Name</form:label>
                     <form:input path="firstName" type="text" placeholder="First Name" />
                     <br/>

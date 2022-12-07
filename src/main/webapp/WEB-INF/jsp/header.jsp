@@ -5,7 +5,7 @@
     if(request.getParameter("logout") != null) {
         boolean isLogout = Boolean.parseBoolean(request.getParameter("logout"));
         if(isLogout) {
-            request.getSession().setAttribute("current_user", new Object());
+            request.getSession().setAttribute("current_user", null);
         } else {
             response.sendRedirect(request.getContextPath() + "/error");
             return;
@@ -16,8 +16,6 @@
 <html>
 <head>
     <title><%= title %></title>
-    <script src="${pageContext.request.contextPath}/static/js/bootstrap.js" type="text/javascript"></script>
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/static/css/bootstrap.css" />
 </head>
 <body>
     <nav>
@@ -28,8 +26,8 @@
             <button class="btn btn-secondary dropdown-toggle" type="button" id="accountMenu" data-toggle="dropdown">Account</button>
         </div>
         <div class="dropdown-menu">
-            <a class="dropdown-item" href="${pageContext.request.requestURI}/account">Information</a>
-            <a class="dropdown-item" href="<%= request.getRequestURI() %>?logout=true">Logout</a>
+            <a class="dropdown-item" href="${pageContext.request.contextPath}/account">Information</a>
+            <a class="dropdown-item" href="${pageContext.request.contextPath}?logout=true">Logout</a>
         </div>
         <% } %>
     </nav>
