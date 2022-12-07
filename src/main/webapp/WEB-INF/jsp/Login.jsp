@@ -3,6 +3,9 @@
 <% String title = "Login"; %>
 <%@ include file="header.jsp" %>
 <body>
+    <script type="text/javascript">
+
+    </script>
     <div class="container">
         <div class="row"></div>
         <div class="row">

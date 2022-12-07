@@ -3,11 +3,13 @@ package tlcm.website.thebrewery.pages;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import tlcm.website.thebrewery.converter.ResultSetToUserConverter;
 import tlcm.website.thebrewery.object.User;
 
 import javax.servlet.http.HttpServletRequest;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 @Controller
@@ -40,6 +42,16 @@ public class Account {
 
         try(Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/users", username, password)) {
 
+            PreparedStatement st = conn.prepareStatement("SELECT username, password FROM users WHERE username = ? AND password = ?");
+            st.setString(1, user.getUsername());
+            st.setString(2, user.getPassword());
+
+
+            ResultSetToUserConverter converter = new ResultSetToUserConverter(st.executeQuery());
+            User userToLogin = converter.convert();
+            if(!user.equals(userToLogin)) {
+                return "redirect:/login?result=false";
+            }
         } catch(SQLException e){
             e.getSQLState();
         }
