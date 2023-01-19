@@ -1,16 +1,21 @@
 package tlcm.website.thebrewery.converter;
 
-import tlcm.website.thebrewery.object.User;
+import tlcm.website.thebrewery.entities.User;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class ResultSetToUserConverter {
-    private ResultSet set;
+    private final ResultSet set;
     public ResultSetToUserConverter(ResultSet set) {
         this.set = set;
     }
 
+    /**
+     * This retrieves a user from the Database. <bold>And moves the ResultSet cursor.</bold>
+     *
+     * @return User to the Database
+     */
     public User convert() {
         User user = null;
         try {

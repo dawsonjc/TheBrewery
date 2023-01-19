@@ -11,4 +11,5 @@ public class FrontPage {
     public String index() {
         return "index";
     }
+
 }

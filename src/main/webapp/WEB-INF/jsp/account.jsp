@@ -1,4 +1,4 @@
-<%--
+<%@ page import="tlcm.website.thebrewery.entities.User" %><%--
   Created by IntelliJ IDEA.
   User: Dawson
   Date: 12/5/2022
@@ -10,6 +10,12 @@
 <% String title = "Account Information"; %>
 <%@ include file="header.jsp"%>
 <body>
-
+<%
+    User user = (User) request.getSession().getAttribute("current_user");
+%>
+<table>
+    <tr></tr>
+    <tr></tr>
+</table>
 </body>
 </html>

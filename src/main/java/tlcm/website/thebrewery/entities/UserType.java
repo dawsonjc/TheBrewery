@@ -1,4 +1,4 @@
-package tlcm.website.thebrewery.object;
+package tlcm.website.thebrewery.entities;
 
 public enum UserType {
     ADMIN("Admin"),

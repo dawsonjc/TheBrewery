@@ -1,12 +1,22 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
+<%
+    boolean result = false;
+    if(request.getParameter("result") != null) {
+         result = !Boolean.parseBoolean(request.getParameter("result"));
+    }
+%>
 
 
 <html>
 <% String title = "Login"; %>
 <%@ include file="header.jsp" %>
-
 <body>
+    <script type="text/javascript">
+        if(<%= result %>) {
+            alert("Fuckin' moron")
+        }
+    </script>
     <div class="container">
         <div class="row">
             <div class="col-md-6">

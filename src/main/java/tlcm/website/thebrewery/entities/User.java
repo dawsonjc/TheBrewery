@@ -1,4 +1,4 @@
-package tlcm.website.thebrewery.object;
+package tlcm.website.thebrewery.entities;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;

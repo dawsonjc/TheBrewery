@@ -4,8 +4,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import tlcm.website.thebrewery.converter.ResultSetToUserConverter;
-import tlcm.website.thebrewery.object.User;
-import tlcm.website.thebrewery.object.UserType;
+import tlcm.website.thebrewery.entities.User;
+import tlcm.website.thebrewery.entities.UserType;
 
 import javax.servlet.http.HttpServletRequest;
 import java.sql.*;
@@ -27,7 +27,7 @@ public class Account {
         final String password = "password";
 
         try(Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/brewery", username, password)) {
-            String sql = "INSERT INTO users(user_type, first_name, last_name, username, password) VALUES(?, ?, ?, ?, ?)";
+            String sql = "INSERT INTO users (user_type, first_name, last_name, username, password) VALUES(?, ?, ?, ?, ?)";
             PreparedStatement st = conn.prepareStatement(sql);
             st.setString(1, UserType.USER.toString());
             st.setString(2, user.getFirstName());
@@ -71,7 +71,6 @@ public class Account {
             }
 
             request.getSession().setAttribute("current_user", userToLogin);
-
         } catch(SQLException e) {
             return "redirect:/error";
         }
