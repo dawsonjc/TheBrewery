@@ -1,18 +1,22 @@
 package tlcm.website.thebrewery.pages;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import tlcm.website.thebrewery.converter.ResultSetToUserConverter;
-import tlcm.website.thebrewery.entities.User;
-import tlcm.website.thebrewery.entities.UserType;
+import tlcm.website.thebrewery.converter.UserConverter;
+import tlcm.website.thebrewery.entities.BackEndUser;
+import tlcm.website.thebrewery.entities.FrontUser;
+import tlcm.website.thebrewery.services.UserService;
 
 import javax.servlet.http.HttpServletRequest;
-import java.sql.*;
 
 @Controller
 @RequestMapping(value = "account")
 public class Account {
+
+    @Autowired
+    private UserService service;
 
     @GetMapping(value = "")
     public String account() {
@@ -20,60 +24,40 @@ public class Account {
     }
 
     @PostMapping(value = "register")
-    public String register(@ModelAttribute(value = "new_user") User user,
+    public String register(@ModelAttribute(value = "new_user") FrontUser user,
                            HttpServletRequest request) {
-
-        final String username = "root";
-        final String password = "password";
-
-        try(Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/brewery", username, password)) {
-            String sql = "INSERT INTO users (user_type, first_name, last_name, username, password) VALUES(?, ?, ?, ?, ?)";
-            PreparedStatement st = conn.prepareStatement(sql);
-            st.setString(1, UserType.USER.toString());
-            st.setString(2, user.getFirstName());
-            st.setString(3, user.getLastName());
-            st.setString(4, user.getUsername());
-            st.setString(5, user.getPassword());
-
-            st.execute();
-        } catch(SQLException e) {
+        UserConverter converter = new UserConverter();
+        BackEndUser theUser = service.createUser(converter.convertFrontUserToBackEndUser(user));
+        if(theUser == null) {
             return "redirect:/error";
         }
 
-        request.getSession().setAttribute("current_user", user);
+        FrontUser frontUser = converter.convertBackEndUserToFrontUser(theUser);
+
+        request.getSession().setAttribute("current_user", frontUser);
         return "redirect:/";
     }
 
     @RequestMapping(value = "login")
     public String login(Model model) {
-        model.addAttribute("current_user", new User());
-        model.addAttribute("new_user", new User());
+        model.addAttribute("current_user", new FrontUser());
+        model.addAttribute("new_user", new FrontUser());
         return "Login";
     }
 
     @PostMapping(value = "login/verify")
-    public String loginVerify(@ModelAttribute(value = "current_user") User user,
+    public String loginVerify(@ModelAttribute(value = "current_user") FrontUser userToLogin,
                               HttpServletRequest request) {
-        final String username = "root";
-        final String password = "password";
+        UserConverter converter = new UserConverter();
 
-        try(Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/brewery", username, password)) {
+        BackEndUser user = converter.convertFrontUserToBackEndUser(userToLogin);
 
-            PreparedStatement st = conn.prepareStatement("SELECT * FROM users WHERE username = ? AND password = ?");
-            st.setString(1, user.getUsername());
-            st.setString(2, user.getPassword());
-
-            ResultSetToUserConverter converter = new ResultSetToUserConverter(st.executeQuery());
-
-            User userToLogin = converter.convert();
-            if(!user.equals(userToLogin)) {
-                return "redirect:/login?result=false";
-            }
-
-            request.getSession().setAttribute("current_user", userToLogin);
-        } catch(SQLException e) {
-            return "redirect:/error";
+        if(!this.service.userExists(user)) {
+            return "redirect:/";
         }
+
+        request.getSession().setAttribute("current_user", converter.convertBackEndUserToFrontUser(user));
+
         return "redirect:/";
     }
 }

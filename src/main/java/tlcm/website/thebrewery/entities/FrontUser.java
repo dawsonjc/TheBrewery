@@ -1,11 +1,12 @@
 package tlcm.website.thebrewery.entities;
 
+
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-public class User {
-    private UserType type;
+public class FrontUser {
     private int id;
+    private UserType type;
     private String firstName;
     private String lastName;
     private String username;
@@ -15,16 +16,16 @@ public class User {
         return new Builder();
     }
 
-    public UserType getType() {
-        return this.type;
-    }
-
     public int getId() {
         return this.id;
     }
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public UserType getType() {
+        return this.type;
     }
 
     public void setType(UserType type) {
@@ -78,32 +79,15 @@ public class User {
     }
 
     @Override
-    public boolean equals(Object that) {
-        if(this == that) {
-            return true;
-        }
-
-        if(!(that instanceof User)) {
-            return false;
-        }
-
-        User thatUser = (User) that;
-
-        if(!this.username.equals(thatUser.username) && !this.password.equals(thatUser.password)) {
-            return false;
-        }
-
-        return true;
-    }
-
-    public String toJavascriptObject() {
-        return "User { " +
-                "type:" + this.type +
-                ", id:" + this.id +
-                ", firstName: '" + this.firstName + '\'' +
-                ", lastName: '" + this.lastName + '\'' +
-                ", username: '" + this.username + '\'' +
-                " }";
+    public String toString() {
+        return "FrontUser{" +
+                "id=" + id +
+                ", type=" + type +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                '}';
     }
 
     public static class Builder {
@@ -114,38 +98,38 @@ public class User {
         private String username;
         private String password;
 
-        public Builder withUserType(UserType userType) {
+        public FrontUser.Builder withUserType(UserType userType) {
             this.userType = userType;
             return this;
         }
 
-        public Builder withId(int id) {
+        public FrontUser.Builder withId(int id) {
             this.id = id;
             return this;
         }
 
-        public Builder withFirstName(String firstName) {
+        public FrontUser.Builder withFirstName(String firstName) {
             this.firstName = firstName;
             return this;
         }
 
-        public Builder withLastName(String lastName) {
+        public FrontUser.Builder withLastName(String lastName) {
             this.lastName = lastName;
             return this;
         }
 
-        public Builder withUsername(String username) {
+        public FrontUser.Builder withUsername(String username) {
             this.username = username;
             return this;
         }
 
-        public Builder withPassword(String password) {
+        public FrontUser.Builder withPassword(String password) {
             this.password = password;
             return this;
         }
 
-        public User build() {
-            User user = new User();
+        public FrontUser build() {
+            FrontUser user = new FrontUser();
             user.type = this.userType;
             user.id = this.id;
             user.firstName = this.firstName;
@@ -157,3 +141,5 @@ public class User {
         }
     }
 }
+
+
