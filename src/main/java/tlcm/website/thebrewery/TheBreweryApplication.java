@@ -2,8 +2,10 @@ package tlcm.website.thebrewery;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.Bean;
-import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import javax.servlet.http.HttpServletRequest;
 
 @SpringBootApplication
 public class TheBreweryApplication {
@@ -11,4 +13,10 @@ public class TheBreweryApplication {
         SpringApplication.run(TheBreweryApplication.class, args);
     }
 
+
+    @RequestMapping(value = "/error")
+    public String error(Model model, HttpServletRequest request) {
+        request.setAttribute("errorMessage", model.getAttribute("errorMessage"));
+        return "error";
+    }
 }

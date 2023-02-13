@@ -1,4 +1,4 @@
-package tlcm.website.thebrewery.entities;
+package tlcm.website.thebrewery.entities.users;
 
 
 import java.security.MessageDigest;

@@ -6,14 +6,14 @@
         boolean isLogout = Boolean.parseBoolean(request.getParameter("logout"));
         if(isLogout) {
             request.getSession().setAttribute("current_user", null);
+            response.sendRedirect(request.getContextPath());
         } else {
             response.sendRedirect(request.getContextPath() + "/error");
-            return;
         }
+        return;
     }
 %>
 
-<!-- This is a comment -->
 
 <html>
 <head>
@@ -27,7 +27,7 @@
 <body>
     <nav>
         <% if(request.getSession().getAttribute("current_user") == null) { %>
-        <a href="${pageContext.request.contextPath}/account/login">Login | Register</a>
+        <button><a href="${pageContext.request.contextPath}/account/login">Login | Register</a></button>
         <% } else { %>
         <div class="dropdown">
             <a type="button" class="btn btn-primary" href="${pageContext.request.contextPath}/">Home</a>
@@ -39,5 +39,45 @@
         </div>
         <% } %>
 
+    </nav>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="#">Navbar</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavDropdown">
+            <ul class="navbar-nav">
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="dropdown1" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Dropdown 1
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="dropdown1">
+                        <a class="dropdown-item" href="#">Action 1</a>
+                        <a class="dropdown-item" href="#">Action 2</a>
+                        <a class="dropdown-item" href="#">Action 3</a>
+                    </div>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="dropdown2" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Dropdown 2
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="dropdown2">
+                        <a class="dropdown-item" href="#">Action 1</a>
+                        <a class="dropdown-item" href="#">Action 2</a>
+                        <a class="dropdown-item" href="#">Action 3</a>
+                    </div>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="dropdown3" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Dropdown 3
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="dropdown3">
+                        <a class="dropdown-item" href="#">Action 1</a>
+                        <a class="dropdown-item" href="#">Action 2</a>
+                        <a class="dropdown-item" href="#">Action 3</a>
+                    </div>
+                </li>
+            </ul>
+        </div>
     </nav>
 </body>

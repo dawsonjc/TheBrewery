@@ -1,4 +1,4 @@
-<%@ page import="tlcm.website.thebrewery.entities.FrontUser" %><%--
+<%@ page import="tlcm.website.thebrewery.entities.users.FrontUser" %><%--
   Created by IntelliJ IDEA.
   User: Dawson
   Date: 12/5/2022
@@ -13,6 +13,7 @@
 <%
     FrontUser user = (FrontUser) request.getSession().getAttribute("current_user");
 %>
+
 <table>
     <tr></tr>
     <tr></tr>

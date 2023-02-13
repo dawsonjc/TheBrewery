@@ -1,5 +1,4 @@
-package tlcm.website.thebrewery.entities;
-
+package tlcm.website.thebrewery.entities.users;
 
 import javax.persistence.*;
 
@@ -14,17 +13,31 @@ public class BackEndUser {
     @Column(name="user_type")
     @Enumerated(EnumType.ORDINAL)
     private UserType type;
+
     @Column(name="first_name")
     private String firstName;
+
     @Column(name="last_name")
     private String lastName;
+
     @Column(name="username")
     private String username;
+
     @Column(name="password")
     private String password;
 
     public static Builder builder() {
         return new Builder();
+    }
+
+    public Builder toBuilder() {
+        return new Builder()
+                .withId(this.id)
+                .withUserType(this.type)
+                .withFirstName(this.firstName)
+                .withLastName(this.lastName)
+                .withUsername(this.username)
+                .withPassword(this.password);
     }
 
     public UserType getType() {
@@ -92,6 +105,11 @@ public class BackEndUser {
         }
 
         return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return this.id;
     }
 
     public String toJavascriptObject() {

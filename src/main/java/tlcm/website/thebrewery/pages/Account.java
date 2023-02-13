@@ -1,12 +1,17 @@
 package tlcm.website.thebrewery.pages;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import tlcm.website.thebrewery.converter.UserConverter;
-import tlcm.website.thebrewery.entities.BackEndUser;
-import tlcm.website.thebrewery.entities.FrontUser;
+import tlcm.website.thebrewery.entities.users.BackEndUser;
+import tlcm.website.thebrewery.entities.users.FrontUser;
+import tlcm.website.thebrewery.exceptions.UserNotCreatedException;
 import tlcm.website.thebrewery.services.UserService;
 
 import javax.servlet.http.HttpServletRequest;
@@ -24,11 +29,13 @@ public class Account {
     }
 
     @PostMapping(value = "register")
-    public String register(@ModelAttribute(value = "new_user") FrontUser user,
-                           HttpServletRequest request) {
+    public String register(Model model,
+                           HttpServletRequest request,
+                           @ModelAttribute(value = "new_user") FrontUser user) {
         UserConverter converter = new UserConverter();
         BackEndUser theUser = service.createUser(converter.convertFrontUserToBackEndUser(user));
         if(theUser == null) {
+            model.addAttribute("error", new UserNotCreatedException());
             return "redirect:/error";
         }
 
@@ -46,18 +53,29 @@ public class Account {
     }
 
     @PostMapping(value = "login/verify")
-    public String loginVerify(@ModelAttribute(value = "current_user") FrontUser userToLogin,
-                              HttpServletRequest request) {
+    public String loginVerify(HttpServletRequest request,
+                              @ModelAttribute(value = "current_user") FrontUser userToLogin) {
         UserConverter converter = new UserConverter();
 
         BackEndUser user = converter.convertFrontUserToBackEndUser(userToLogin);
 
-        if(!this.service.userExists(user)) {
-            return "redirect:/";
+        if(!this.service.userExists(userToLogin)) {
+            return "redirect:/login?result=false";
         }
 
         request.getSession().setAttribute("current_user", converter.convertBackEndUserToFrontUser(user));
 
         return "redirect:/";
+    }
+
+    @GetMapping(value = "/getUsers")
+    @ResponseBody
+    public Page<BackEndUser> getPaginatedUsers(
+            @RequestParam(value = "page") int page,
+            @RequestParam(value = "size") int size,
+            @RequestParam(value = "sort") String sort
+    ) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sort));
+        return this.service.findAllUsers(pageable);
     }
 }

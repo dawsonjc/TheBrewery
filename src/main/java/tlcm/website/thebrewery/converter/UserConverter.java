@@ -1,10 +1,7 @@
 package tlcm.website.thebrewery.converter;
 
-import tlcm.website.thebrewery.entities.BackEndUser;
-import tlcm.website.thebrewery.entities.FrontUser;
-
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import tlcm.website.thebrewery.entities.users.BackEndUser;
+import tlcm.website.thebrewery.entities.users.FrontUser;
 
 public class UserConverter {
 
@@ -32,6 +29,4 @@ public class UserConverter {
                 .withPassword(backEndUser.getPassword())
                 .build();
     }
-
-
 }
