@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import tlcm.website.thebrewery.entities.users.BackEndUser;
+import tlcm.website.thebrewery.entities.users.Users;
 import tlcm.website.thebrewery.entities.users.FrontUser;
 import tlcm.website.thebrewery.repository.UsersRepository;
 
@@ -15,7 +15,7 @@ public class UserService {
     @Autowired
     private UsersRepository repo;
 
-    public BackEndUser createUser(BackEndUser user) {
+    public Users createUser(Users user) {
         if(repo.findBackEndUserByUsername(user.getUsername()) == null) {
             return null;
         }
@@ -27,33 +27,33 @@ public class UserService {
      * @param id the ID of the user
      * @return A user object of the id
      */
-    public BackEndUser readUserById(int id) {
+    public Users readUserById(int id) {
         return repo.getReferenceById((long) id);
     }
 
     public boolean userExists(FrontUser user) {
-        BackEndUser user1 = this.getDBUserByFrontEndUser(user);
+        Users user1 = this.getDBUserByFrontEndUser(user);
 
         return user1 != null;
     }
 
-    public BackEndUser getDBUserByFrontEndUser(FrontUser user) {
+    public Users getDBUserByFrontEndUser(FrontUser user) {
         return this.repo.findBackEndUserByUsernameAndPassword(user.getUsername(), user.getPassword());
     }
 
-    public BackEndUser updateUser(FrontUser newUser) {
+    public Users updateUser(FrontUser newUser) {
         tlcm.website.thebrewery.converter.
                 UserConverter converter = new tlcm.website.thebrewery.converter.UserConverter();
         return this.updateUser(converter.convertFrontUserToBackEndUser(newUser));
     }
 
-    public BackEndUser updateUser(BackEndUser newUser) {
-        BackEndUser existingUser = this.readUserById(newUser.getId());
+    public Users updateUser(Users newUser) {
+        Users existingUser = this.readUserById(newUser.getId());
         if(existingUser == null) {
             return null;
         }
 
-        BackEndUser updatedUser = existingUser.toBuilder()
+        Users updatedUser = existingUser.toBuilder()
                 .withFirstName(newUser.getFirstName())
                 .withLastName(newUser.getLastName())
                 .withUsername(newUser.getUsername())
@@ -67,7 +67,7 @@ public class UserService {
         return false;
     }
 
-    public Page<BackEndUser> findAllUsers(Pageable pageable) {
+    public Page<Users> findAllUsers(Pageable pageable) {
         return this.repo.findAll(pageable);
     }
 

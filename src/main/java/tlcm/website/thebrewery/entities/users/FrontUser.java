@@ -1,6 +1,5 @@
 package tlcm.website.thebrewery.entities.users;
 
-
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 

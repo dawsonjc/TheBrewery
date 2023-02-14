@@ -1,6 +1,6 @@
 package tlcm.website.thebrewery.converter;
 
-import tlcm.website.thebrewery.entities.users.BackEndUser;
+import tlcm.website.thebrewery.entities.users.Users;
 import tlcm.website.thebrewery.entities.users.FrontUser;
 
 public class UserConverter {
@@ -10,8 +10,8 @@ public class UserConverter {
      *
      * @return User to the Database
      */
-    public BackEndUser convertFrontUserToBackEndUser(FrontUser frontUser) {
-        return BackEndUser.builder()
+    public Users convertFrontUserToBackEndUser(FrontUser frontUser) {
+        return Users.builder()
                 .withId(frontUser.getId())
                 .withFirstName(frontUser.getFirstName())
                 .withLastName(frontUser.getLastName())
@@ -20,7 +20,7 @@ public class UserConverter {
                 .build();
     }
 
-    public FrontUser convertBackEndUserToFrontUser(BackEndUser backEndUser) {
+    public FrontUser convertBackEndUserToFrontUser(Users backEndUser) {
         return FrontUser.builder()
                 .withId(backEndUser.getId())
                 .withFirstName(backEndUser.getFirstName())

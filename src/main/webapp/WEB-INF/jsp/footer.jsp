@@ -1,10 +1,4 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: Dawson
-  Date: 12/6/2022
-  Time: 6:07 PM
-  To change this template use File | Settings | File Templates.
---%>
+
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <footer class="bg-dark text-white py-5">
     <div class="container">
@@ -17,7 +11,7 @@
                 <h5 class="font-weight-bold text-uppercase">Quick Links</h5>
                 <ul class="list-unstyled">
                     <li>
-                        <a href="#">Home</a>
+                        <a href="${pageContext.request.contextPath}">Home</a>
                     </li>
                     <li>
                         <a href="#">Services</a>

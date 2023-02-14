@@ -9,7 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import tlcm.website.thebrewery.converter.UserConverter;
-import tlcm.website.thebrewery.entities.users.BackEndUser;
+import tlcm.website.thebrewery.entities.users.Users;
 import tlcm.website.thebrewery.entities.users.FrontUser;
 import tlcm.website.thebrewery.exceptions.UserNotCreatedException;
 import tlcm.website.thebrewery.services.UserService;
@@ -33,7 +33,7 @@ public class Account {
                            HttpServletRequest request,
                            @ModelAttribute(value = "new_user") FrontUser user) {
         UserConverter converter = new UserConverter();
-        BackEndUser theUser = service.createUser(converter.convertFrontUserToBackEndUser(user));
+        Users theUser = service.createUser(converter.convertFrontUserToBackEndUser(user));
         if(theUser == null) {
             model.addAttribute("error", new UserNotCreatedException());
             return "redirect:/error";
@@ -57,7 +57,7 @@ public class Account {
                               @ModelAttribute(value = "current_user") FrontUser userToLogin) {
         UserConverter converter = new UserConverter();
 
-        BackEndUser user = converter.convertFrontUserToBackEndUser(userToLogin);
+        Users user = converter.convertFrontUserToBackEndUser(userToLogin);
 
         if(!this.service.userExists(userToLogin)) {
             return "redirect:/login?result=false";
@@ -70,7 +70,7 @@ public class Account {
 
     @GetMapping(value = "/getUsers")
     @ResponseBody
-    public Page<BackEndUser> getPaginatedUsers(
+    public Page<Users> getPaginatedUsers(
             @RequestParam(value = "page") int page,
             @RequestParam(value = "size") int size,
             @RequestParam(value = "sort") String sort

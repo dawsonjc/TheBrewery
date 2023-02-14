@@ -4,7 +4,7 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "users")
-public class BackEndUser {
+public class Users {
     @Id
     @GeneratedValue
     @Column(name="id")
@@ -94,11 +94,11 @@ public class BackEndUser {
             return true;
         }
 
-        if(!(that instanceof BackEndUser)) {
+        if(!(that instanceof Users)) {
             return false;
         }
 
-        BackEndUser thatUser = (BackEndUser) that;
+        Users thatUser = (Users) that;
 
         if(!this.username.equals(thatUser.username) && !this.password.equals(thatUser.password)) {
             return false;
@@ -172,8 +172,8 @@ public class BackEndUser {
             return this;
         }
 
-        public BackEndUser build() {
-            BackEndUser user = new BackEndUser();
+        public Users build() {
+            Users user = new Users();
             user.type = this.userType;
             user.id = this.id;
             user.firstName = this.firstName;

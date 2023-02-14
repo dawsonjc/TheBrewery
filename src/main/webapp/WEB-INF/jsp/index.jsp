@@ -3,6 +3,7 @@
 <% String title = "The Brewery"; %>
 <%@ include file="header.jsp"%>
 <body>
+    <script type="text/javascript" src="<%= request.getContextPath() %>/static/js/account.js"></script>
     <script type="text/javascript">
         let pageNum = 0;
         let maxPage = null;
@@ -24,8 +25,10 @@
                 $("#beerTable").children("tr").each(
                     function() {
                         if(content.length <= dataRow) {
+                            $(this).text("");
                             return;
                         }
+
                         let dataIndex = 0;
                         let values = Object.values(content[dataRow]);
 
@@ -35,6 +38,7 @@
                                 if(index === 0) {
                                     return;
                                 }
+
                                 // td
                                 $(this).text(values[dataIndex++]);
                             }
