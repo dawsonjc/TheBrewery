@@ -85,12 +85,16 @@
                     Switch items
                 </button>
                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-
-
                     <a class="dropdown-item" href="#" id="beer-button">Beer</a>
                     <a class="dropdown-item" href="#" id="wine-button">Wine</a>
                     <a class="dropdown-item" href="#" id="whiskey-button">Whiskey</a>
-                    <a class="dropdown-item" href="#" data-toggle="popover" data-placement="left" data-content="This is the content of the popover." onclick="event.stopPropagation();">Popover</a>
+                    <a class="dropdown-item" href="#" data-toggle="popover" data-placement="left" data-target="#popover-content" onclick="event.stopPropagation();">Popover</a>
+                </div>
+            </div>
+            <div id="popover-content" style="display:none;">
+                <div class="container-fluid">
+                    <div class="row"><a class="dropdown-item btn" href="#">Bread</a></div>
+                    <div class="row"><a class="dropdown-item btn" href="#">Grain</a></div>
                 </div>
             </div>
             <div class="col-lg-10"></div>
