@@ -97,6 +97,8 @@ public class FrontUser {
         private String username;
         private String password;
 
+        private Builder() {}
+
         public FrontUser.Builder withUserType(UserType userType) {
             this.userType = userType;
             return this;

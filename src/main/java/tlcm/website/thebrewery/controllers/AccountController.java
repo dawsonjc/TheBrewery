@@ -1,4 +1,4 @@
-package tlcm.website.thebrewery.pages;
+package tlcm.website.thebrewery.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -18,7 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 
 @Controller
 @RequestMapping(value = "account")
-public class Account {
+public class AccountController {
 
     @Autowired
     private UserService service;

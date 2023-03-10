@@ -142,6 +142,8 @@ public class Users {
         private String username;
         private String password;
 
+        private Builder() {}
+
         public Builder withUserType(UserType userType) {
             this.userType = userType;
             return this;

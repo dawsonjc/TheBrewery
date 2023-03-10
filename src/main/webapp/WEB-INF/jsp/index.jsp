@@ -6,21 +6,17 @@
     <script type="text/javascript" src="<%= request.getContextPath() %>/static/js/account.js"></script>
     <script type="text/javascript">
         let pageNum = 0;
-        let maxPage = null;
+        const maxPage = <%= request.getAttribute("totalPages") %>;
 
-        async function getPage(page, size) {
+        function getPage(page, size) {
             $.ajax({
-                url: `${pageContext.request.contextPath}/account/getUsers?page=\${page}&size=\${size}&sort=id`,
-                type: "GET"
+                url: `${pageContext.request.contextPath}/beer/get-beer-page?page=\${page}&size=\${size}`,
+                type: "GET",
+                dataType: "json"
             }).then(function(data) {
-                if(maxPage === null) {
-                    data.totalPages = maxPage;
-                }
-
                 let content = data.content;
                 let dataRow = 0;
                 let dataColumn = 0;
-
                 // tbody
                 $("#beerTable").children("tr").each(
                     function() {
@@ -31,16 +27,22 @@
 
                         let dataIndex = 0;
                         let values = Object.values(content[dataRow]);
-
                         // row
                         $(this).children().each(
                             function(index) {
-                                if(index === 0) {
-                                    return;
+                                let value = values[dataIndex++];
+                                switch(index) {
+                                    case 0:
+                                        let newTag = $("<a>");
+                                        newTag.attr("href", `${pageContext.request.contextPath}/alcohol-entity?id=\${value}`);
+                                        newTag.html("<i class=\"fa fa-beer fa-2x\"></i>")
+
+                                        $(this).append(newTag);
+                                        return;
                                 }
 
                                 // td
-                                $(this).text(values[dataIndex++]);
+                                $(this).text(value);
                             }
                         );
                         dataColumn = 0;
@@ -65,18 +67,18 @@
 
             getPage(pageNum++, 10)
         }
-        getPage(pageNum, 10)
-    </script>
 
+        getPage(0, 10);
+    </script>
     <table class="table table-striped table-hover">
         <thead>
             <tr>
                 <td>link</td>
-                <td>Id</td>
-                <td>User_Type</td>
-                <td>First Name</td>
-                <td>Last Name</td>
-                <td>Username</td>
+                <td>Name</td>
+                <td>Alcohol Content</td>
+                <td>Color</td>
+                <td>Style</td>
+                <td>Size</td>
             </tr>
         </thead>
         <tbody id="beerTable">
