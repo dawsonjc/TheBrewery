@@ -1,10 +1,6 @@
 package tlcm.website.thebrewery.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -66,16 +62,5 @@ public class AccountController {
         request.getSession().setAttribute("current_user", converter.convertBackEndUserToFrontUser(user));
 
         return "redirect:/";
-    }
-
-    @GetMapping(value = "/getUsers")
-    @ResponseBody
-    public Page<Users> getPaginatedUsers(
-            @RequestParam(value = "page") int page,
-            @RequestParam(value = "size") int size,
-            @RequestParam(value = "sort") String sort
-    ) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by(sort));
-        return this.service.findAllUsers(pageable);
     }
 }
