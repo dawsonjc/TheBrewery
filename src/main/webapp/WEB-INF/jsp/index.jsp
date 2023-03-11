@@ -3,7 +3,6 @@
 <% String title = "The Brewery"; %>
 <%@ include file="header.jsp"%>
 <body>
-    <script type="text/javascript" src="<%= request.getContextPath() %>/static/js/account.js"></script>
     <script type="text/javascript">
         let pageNum = 0;
         const maxPage = <%= request.getAttribute("totalPages") %>;
@@ -18,7 +17,7 @@
                 let dataRow = 0;
                 let dataColumn = 0;
                 // tbody
-                $("#beerTable").children("tr").each(
+                $("#alcohol-tbody").children("tr").each(
                     function() {
                         if(content.length <= dataRow) {
                             $(this).text("");
@@ -82,7 +81,7 @@
         <div class="col-lg-2">
             <div class="dropdown">
                 <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Switch items
+                    Switch items [Beer]
                 </button>
                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                     <a class="dropdown-item" href="#" id="beer-button">Beer</a>
@@ -103,7 +102,7 @@
     <div class="row">
         <div class="col">
             <table class="table table-striped table-hover">
-                <thead>
+                <thead id="alcohol-thead">
                 <tr>
                     <td>Link</td>
                     <td>Name</td>
@@ -113,7 +112,7 @@
                     <td>Size</td>
                 </tr>
                 </thead>
-                <tbody id="beerTable">
+                <tbody id="alcohol-tbody">
                 <tr id="row-0">
                     <td id="row-0-col-0"></td>
                     <td id="row-0-col-1"></td>
@@ -195,7 +194,7 @@
                     <td id="row-9-col-5"></td>
                 </tr>
                 </tbody>
-                <tfoot>
+                <tfoot id="alcohol-tfoot">
                 <tr>
                     <td>null</td>
                     <td>null</td>

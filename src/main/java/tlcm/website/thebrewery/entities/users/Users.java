@@ -48,11 +48,22 @@ public class Users {
         return this.id;
     }
 
+    @Deprecated
     public void setId(int id) {
+        if(this.id != null) {
+            return;
+        }
         this.id = id;
     }
 
+    /**
+     * Note: can only be used once
+     * @param type User Type (admin, user)
+     */
     public void setType(UserType type) {
+        if(this.type != null) {
+            return;
+        }
         this.type = type;
     }
 
@@ -61,6 +72,9 @@ public class Users {
     }
 
     public void setFirstName(String firstName) {
+        if(this.firstName != null) {
+            return;
+        }
         this.firstName = firstName;
     }
 
@@ -69,6 +83,9 @@ public class Users {
     }
 
     public void setLastName(String lastName) {
+        if(this.lastName != null) {
+            return;
+        }
         this.lastName = lastName;
     }
 
@@ -77,6 +94,9 @@ public class Users {
     }
 
     public void setUsername(String username) {
+        if(this.username != null) {
+            return;
+        }
         this.username = username;
     }
 
@@ -85,6 +105,9 @@ public class Users {
     }
 
     public void setPassword(String password) {
+        if(this.password != null) {
+            return;
+        }
         this.password = password;
     }
 

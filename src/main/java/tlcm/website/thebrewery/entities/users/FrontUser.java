@@ -60,6 +60,9 @@ public class FrontUser {
     }
 
     public void setPassword(String password) {
+        if(this.password != null) {
+            return;
+        }
         try {
             MessageDigest messageDigest = MessageDigest.getInstance("MD5");
 

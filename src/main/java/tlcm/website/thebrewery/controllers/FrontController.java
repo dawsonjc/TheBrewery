@@ -30,6 +30,7 @@ public class FrontController {
     }
 
 
+    // TODO: Move method to AlcoholEntityController class potentially?
     /**
      * An API call to get a paginated query for the beer table.
      * @param page Page Number
@@ -37,7 +38,7 @@ public class FrontController {
      * @return Paginated Query
      */
     @ResponseBody
-    @GetMapping(value = "beer/get-beer-page")
+    @GetMapping(value = "alcohol/get-beer-page")
     public Page<Beer> getPaginatedBeers(
             @RequestParam(value = "page") int page,
             @RequestParam(value = "size") int size
