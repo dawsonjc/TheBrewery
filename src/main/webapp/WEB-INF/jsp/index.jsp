@@ -9,7 +9,7 @@
 
         function getPage(page, size) {
             $.ajax({
-                url: `${pageContext.request.contextPath}/beer/get-beer-page?page=\${page}&size=\${size}`,
+                url: `${pageContext.request.contextPath}/alcohol/get-beer-page?page=\${page}&size=\${size}`,
                 type: "GET",
                 dataType: "json"
             }).then(function(data) {
@@ -196,10 +196,10 @@
                 </tbody>
                 <tfoot id="alcohol-tfoot">
                 <tr>
-                    <td>null</td>
-                    <td>null</td>
-                    <td>null</td>
-                    <td>null</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
                     <td style="text-align:right"><button onclick="back()">back</button></td>
                     <td style="text-align:right"><button onclick="next()">next</button></td>
                 </tr>

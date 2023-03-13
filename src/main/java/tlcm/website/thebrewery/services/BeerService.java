@@ -9,6 +9,7 @@ import tlcm.website.thebrewery.entities.product.Beer;
 import tlcm.website.thebrewery.repository.BeerRepository;
 import tlcm.website.thebrewery.repository.MaterialRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -27,7 +28,11 @@ public class BeerService {
         return this.repo.getReferenceById(id);
     }
 
-    public List<Material> getAllMaterials(int id) {
+    public ArrayList<Material> getAllMaterials(int id) {
         return this.materialRepo.findAllByAlcoholId(id);
+    }
+
+    public ArrayList<String> getTableColumns() {
+        return this.repo.getColumns();
     }
 }

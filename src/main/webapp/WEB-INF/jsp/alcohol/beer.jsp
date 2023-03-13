@@ -1,13 +1,14 @@
-<%@ page import="tlcm.website.thebrewery.entities.AlcoholEntity" %>
-<%@ page import="tlcm.website.thebrewery.entities.product.Beer" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page import="tlcm.website.thebrewery.entities.product.Beer" %>
 
 <%
-    if(request.getAttribute("alcohol_entity") == null) {
+    Object temp;
+    if((temp = request.getAttribute("alcohol_entity")) == null || !(temp instanceof Beer)) {
         response.sendRedirect("/");
         return;
     }
-    Beer entity = (Beer) request.getAttribute("alcohol_entity");
+
+    Beer entity = (Beer) temp;
 %>
 
 <html>

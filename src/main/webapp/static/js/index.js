@@ -3,57 +3,139 @@ const AlcoholItem = {
     BEER: "BEER",
     WINE: "WINE",
     WHISKEY: "WHISKEY"
-}
+};
 
 // TODO: We want to save this as a cookies maybe.
 //  So that when the user returns to page we can load what they wanted to
 //  Also will have to switch page number to be like this too (potentially)
 let currentChoice = AlcoholItem.BEER;
 
+/**
+ * It might be pertinent to make this better.
+ */
+class AlcoholData {
+    constructor(type) {
+        this.type = type;
+    }
+
+    async load(pageNum) {
+        let headers;
+        let data;
+        try {
+            headers = await $.ajax({
+                url: `${contextPath}/alcohol/get-${this.type}-columns`,
+                method: "GET",
+                dataType: "json"
+            });
+            data = await $.ajax({
+                url: `${contextPath}/alcohol/get-${this.type}-page?page=${pageNum}&size=10`,
+                method: "GET",
+                dataType: "json"
+            }).catch();
+        } catch(exception) {
+
+        }
+
+        this.#loadHeaders(headers.content);
+        this.#loadBody(data.content);
+    }
+
+    #loadHeaders(content) {
+        let dataRow = 0;
+        let dataColumn = 0;
+        // head
+        $("#alcohol-thead").children("tr").each(function() {
+            if(content.length <= dataRow) {
+                $(this).text("");
+                return;
+            }
+            let dataIndex = 0;
+            let values = Object.values(content[dataRow]);
+            // row
+            $(this).children().each(function(index) {
+                if(index === 0) {
+                    return;
+                }
+                let value = values[dataIndex++];
+
+                // td
+                $(this).text(value);
+            });
+            dataColumn = 0;
+            dataRow++;
+        });
+    }
+
+    #loadBody(content) {
+        const self = this;
+        let dataRow = 0;
+        let dataColumn = 0;
+        // tbody
+        $("#alcohol-tbody").children("tr").each(function() {
+            if(content.length <= dataRow) {
+                $(this).text("");
+                return;
+            }
+
+            let dataIndex = 0;
+            let values = Object.values(content[dataRow]);
+            // row
+            $(this).children().each(function(index) {
+                let value = values[dataIndex++];
+                switch(index) {
+                    case 0:
+                        let newTag = $("<a>");
+                        newTag.attr("href", `${contextPath}/alcohol-entity?id=${value}`);
+                        newTag.html(`<i class="fa fa-${self.type} fa-2x"></i>`)
+
+                        $(this).append(newTag);
+                        return;
+                }
+
+                // td
+                $(this).text(value);
+            });
+            dataColumn = 0;
+            dataRow++;
+        });
+    }
+}
+
 $(document).ready(function() {
+    const beerData = new AlcoholData(AlcoholItem.BEER.toLowerCase());
+    const wineData = new AlcoholData(AlcoholItem.WINE.toLowerCase());
+    const whiskeyData = new AlcoholData(AlcoholItem.WHISKEY.toLowerCase());
+
     $("#beer-button").click(function() {
         if(currentChoice === AlcoholItem.BEER) {
             return;
         }
+        if(beerData.load(0) === null) {
+            return;
+        }
+        $("#dropdownMenuButton").text("Switch items [Beer] ");
 
         currentChoice = AlcoholItem.BEER;
-        $("#dropdownMenuButton").text("Switch items [Beer]");
-
-        let data = new AlcoholData(
-            "beer",
-            "GET"
-        );
-
-        data.start();
     });
     $("#wine-button").click(function() {
         if(currentChoice === AlcoholItem.WINE) {
             return;
         }
+        wineData.load(0);
+        $("#dropdownMenuButton").text("Switch items [Wine] ");
 
         currentChoice = AlcoholItem.WINE;
-        $("#dropdownMenuButton").text("Switch items [Wine]");
-
-        let data = new AlcoholData(
-            "wine",
-            "GET"
-        );
-        data.start();
     });
 
     $("#whiskey-button").click(function() {
         if(currentChoice === AlcoholItem.WHISKEY) {
             return;
         }
-
+        whiskeyData.load(0);
+        $("#dropdownMenuButton").text("Switch items [Whiskey] ");
         currentChoice = AlcoholItem.WHISKEY;
-        $("#dropdownMenuButton").text("Switch items [Whiskey]");
 
-        let data = new AlcoholData(
-            currentChoice.toLowerCase(),
-            "GET"
-        );
-        data.start();
+
     });
 
     $("[data-toggle='popover']").popover({
@@ -70,107 +152,3 @@ $(document).ready(function() {
     });
 });
 
-
-
-// TODO: scrap
-class AlcoholData {
-    constructor(type, method) {
-        this.alcoholType = type;
-        this.method = method;
-        this.icon = "fa-wrench"; // default icon in case of failure
-    }
-
-    #loadHead(endpoint) {
-        let url = contextPath + endpoint;
-        this.#loadCells("#alcohol-thead", url)
-    }
-
-    #loadBody(endpoint) {
-        let url = contextPath + endpoint;
-        this.#loadCells("#alcohol-tbody", url);
-    }
-
-    #loadCells(target, url) {
-        let icon = this.icon;
-        let alcoholType = this.alcoholType;
-        $.ajax({
-            url: url,
-            type: this.method
-        }).then(function(data) {
-            let content = data.content;
-            let dataRow = 0;
-            let dataColumn = 0;
-
-            // for each row in target element
-            $(target).children("tr").each(
-                function() {
-                    // make sure that we don't create more rows than records retrieved
-                    if(content.length <= dataRow) {
-                        $(this).text("");
-                        return;
-                    }
-
-                    let values = Object.values(content[dataRow]); // extract data from record
-                    let valuesIndex = 0;
-
-                    // for each cell in row
-                    $(this).children("td").each(
-                        function(index) {
-                            // get value than increment index
-                            let value = values[valuesIndex++];
-
-                            switch(index) {
-                                case 0:
-                                    // construct action link
-                                    let newTag = $("<a>");
-
-                                    newTag.attr("href", `${contextPath}/alcohol/${alcoholType}?id=${value}`);
-
-                                    newTag.html(`<i class=\"fa ${icon} fa-2x\"></i>`)
-
-                                    $(this).append(newTag);
-                                    return;
-                            }
-
-                            // cell
-                            $(this).text(value);
-                        }
-                    );
-
-                    // next row and column 0
-                    dataColumn = 0;
-                    dataRow++;
-                }
-            );
-        });
-    }
-
-
-    start() {
-        let theadEndPoint;
-        let tbodyEndPoint;
-
-        // TODO: might have to switch size to a variable
-        switch(this.alcoholType) {
-            case "beer":
-                this.icon = "fa-beer";
-                theadEndPoint = "alcohol/get-beer-columns";
-                tbodyEndPoint = `alcohol/get-beer-page?page=${pageNum}&size=10`
-                break;
-            case "whiskey":
-                this.icon = "fa-whiskey-glass";
-                theadEndPoint = "";
-                tbodyEndPoint = `alcohol/get-whiskey-page?page=${pageNum}&size=10`
-                break;
-            case "wine":
-                this.icon = "fa-wine-glass";
-                theadEndPoint = "alcohol/get-wine-columns";
-                tbodyEndPoint = `alcohol/get-wine-page?page=${pageNum}&size=10`
-                break;
-        }
-
-        // might be a bad implementation
-        this.#loadHead(theadEndPoint);
-        this.#loadBody(tbodyEndPoint);
-    }
-}

@@ -5,6 +5,7 @@ import tlcm.website.thebrewery.entities.material.Material;
 import tlcm.website.thebrewery.services.BeerService;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -83,7 +84,7 @@ public class Beer implements AlcoholEntity {
         this.userId = userId;
     }
 
-    public List<Material> getBeerMaterials(BeerService service) {
+    public ArrayList<Material> getBeerMaterials(BeerService service) {
         return service.getAllMaterials(this.id);
     }
 
