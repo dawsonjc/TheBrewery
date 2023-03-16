@@ -14,6 +14,7 @@ public class TheBreweryApplication {
     }
 
 
+    // TODO: need to make error page better and have errors actually redirect here
     @RequestMapping(value = "/error")
     public String error(Model model, HttpServletRequest request) {
         request.setAttribute("errorMessage", model.getAttribute("errorMessage"));

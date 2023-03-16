@@ -21,7 +21,7 @@
         <div class="row">
             <div class="col-md-6">
                 <h3>Login</h3>
-                <form:form action="${pageContext.request.contextPath}/account/login/verify" method="post" modelAttribute="current_user">
+                <form:form action="${pageContext.request.contextPath}/account/login/verify" method="post" modelAttribute="current_user" onsubmit="return validPassword()">
                     <form:label path="username">Username</form:label>
                     <form:input path="username" type="text" placeholder="username" />
                     <br/>
@@ -33,7 +33,7 @@
             </div>
             <div class="col-md-6">
                 <h3>Register</h3>
-                <form:form action="${pageContext.request.contextPath}/account/register" method="post" modelAttribute="new_user">
+                <form:form action="${pageContext.request.contextPath}/account/register" method="post" modelAttribute="new_user" onsubmit="return validPassword()">
                     <form:label path="firstName">First Name</form:label>
                     <form:input path="firstName" type="text" placeholder="First Name" />
                     <br/>

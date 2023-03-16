@@ -19,25 +19,23 @@ class AlcoholData {
     }
 
     async load(pageNum) {
-        let headers;
         let data;
         try {
-            headers = await $.ajax({
-                url: `${contextPath}/alcohol/get-${this.type}-columns`,
+            data = await $.ajax({
+                url: `${contextPath}/alcohol/get-alcohol-information/${this.type}?page=${pageNum}&size=10`,
                 method: "GET",
                 dataType: "json"
             });
-            data = await $.ajax({
-                url: `${contextPath}/alcohol/get-${this.type}-page?page=${pageNum}&size=10`,
-                method: "GET",
-                dataType: "json"
-            }).catch();
         } catch(exception) {
-
+            return false;
         }
 
-        this.#loadHeaders(headers.content);
-        this.#loadBody(data.content);
+
+        if(data.headers == null || data.body == null) {
+            return false;
+        }
+
+        return this.#loadHeaders(data.headers) && this.#loadBody(data.body.content);
     }
 
     #loadHeaders(content) {
@@ -49,14 +47,19 @@ class AlcoholData {
                 $(this).text("");
                 return;
             }
-            let dataIndex = 0;
-            let values = Object.values(content[dataRow]);
+            let dataIndex = 1;
             // row
             $(this).children().each(function(index) {
                 if(index === 0) {
+                    $(this).text("Link");
                     return;
                 }
-                let value = values[dataIndex++];
+
+                let value = content[dataIndex++].split("_")
+                    .map((word) => {
+                        return word.charAt(0).toUpperCase() + word.substring(1);
+                    })
+                    .join(" ");
 
                 // td
                 $(this).text(value);
@@ -64,6 +67,8 @@ class AlcoholData {
             dataColumn = 0;
             dataRow++;
         });
+
+        return true;
     }
 
     #loadBody(content) {
@@ -85,10 +90,10 @@ class AlcoholData {
                 switch(index) {
                     case 0:
                         let newTag = $("<a>");
-                        newTag.attr("href", `${contextPath}/alcohol-entity?id=${value}`);
+                        newTag.attr("href", `${contextPath}/${self.type}/alcohol-entity?id=${value}`);
                         newTag.html(`<i class="fa fa-${self.type} fa-2x"></i>`)
 
-                        $(this).append(newTag);
+                        $(this).html(newTag);
                         return;
                 }
 
@@ -98,19 +103,25 @@ class AlcoholData {
             dataColumn = 0;
             dataRow++;
         });
+
+        return true;
     }
 }
 
-$(document).ready(function() {
-    const beerData = new AlcoholData(AlcoholItem.BEER.toLowerCase());
-    const wineData = new AlcoholData(AlcoholItem.WINE.toLowerCase());
-    const whiskeyData = new AlcoholData(AlcoholItem.WHISKEY.toLowerCase());
+const dataObjects = {
+    beer: new AlcoholData(AlcoholItem.BEER.toLowerCase()),
+    wine: new AlcoholData(AlcoholItem.WINE.toLowerCase()),
+    whiskey: new AlcoholData(AlcoholItem.WHISKEY.toLowerCase())
+};
 
+$(document).ready(function() {
+
+    // buttons
     $("#beer-button").click(function() {
         if(currentChoice === AlcoholItem.BEER) {
             return;
         }
-        if(beerData.load(0) === null) {
+        if(dataObjects.beer.load(0) === null) {
             return;
         }
         $("#dropdownMenuButton").text("Switch items [Beer] ");
@@ -121,21 +132,18 @@ $(document).ready(function() {
         if(currentChoice === AlcoholItem.WINE) {
             return;
         }
-        wineData.load(0);
+        dataObjects.wine.load(0);
         $("#dropdownMenuButton").text("Switch items [Wine] ");
 
         currentChoice = AlcoholItem.WINE;
     });
-
     $("#whiskey-button").click(function() {
         if(currentChoice === AlcoholItem.WHISKEY) {
             return;
         }
-        whiskeyData.load(0);
+        dataObjects.whiskey.load(0);
         $("#dropdownMenuButton").text("Switch items [Whiskey] ");
         currentChoice = AlcoholItem.WHISKEY;
-
-
     });
 
     $("[data-toggle='popover']").popover({
@@ -146,7 +154,6 @@ $(document).ready(function() {
             return $("#popover-content").html();
         }
     });
-
     $(".dropdown").on("hidden.bs.dropdown", function() {
         $("[data-toggle='popover']").popover("hide");
     });

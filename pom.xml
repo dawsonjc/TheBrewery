@@ -18,7 +18,6 @@
         <java.version>11</java.version>
     </properties>
     <dependencies>
-
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
@@ -69,11 +68,13 @@
             <artifactId>tomcat-embed-jasper</artifactId>
             <version>9.0.68</version>
         </dependency>
+
+        <!-- I don't know why but if this is removed, the code breaks -->
+        <!-- Most likely do to dependency load order, but I have no idea how to solve it -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
         </dependency>
-
     </dependencies>
 
     <build>

@@ -7,22 +7,14 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%
-    RuntimeException exception = null;
-    if(request.getAttribute("error") != null) {
-        exception = (RuntimeException) request.getAttribute("error");
-    } else {
-        response.sendRedirect("/");
-        return;
-    }
-    assert exception != null;
+
 %>
 <html>
 <head>
-    <title><%= exception %></title>
+    <title></title>
 </head>
 <body>
 
-<%= exception.toString() %>
 
 </body>
 </html>

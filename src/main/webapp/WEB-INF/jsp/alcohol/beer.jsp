@@ -2,13 +2,17 @@
 <%@ page import="tlcm.website.thebrewery.entities.product.Beer" %>
 
 <%
-    Object temp;
-    if((temp = request.getAttribute("alcohol_entity")) == null || !(temp instanceof Beer)) {
-        response.sendRedirect("/");
-        return;
+    Beer entity = null;
+    { // destroy temp
+        Object temp;
+        if((temp = request.getAttribute("alcohol_entity")) == null || !(temp instanceof Beer)) {
+            response.sendRedirect("/");
+            return;
+        }
+
+        entity = (Beer) temp;
     }
 
-    Beer entity = (Beer) temp;
 %>
 
 <html>

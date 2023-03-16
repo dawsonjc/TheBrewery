@@ -12,8 +12,11 @@ import tlcm.website.thebrewery.repository.UsersRepository;
 @Service
 public class UserService {
 
-    @Autowired
-    private UsersRepository repo;
+    private final UsersRepository repo;
+
+    public UserService(UsersRepository repo) {
+        this.repo = repo;
+    }
 
     public Users createUser(Users user) {
         if(repo.findBackEndUserByUsername(user.getUsername()) == null) {

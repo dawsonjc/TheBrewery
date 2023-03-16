@@ -19,6 +19,7 @@ public class AccountController {
     @Autowired
     private UserService service;
 
+
     @GetMapping(value = "")
     public String account() {
         return "account";
@@ -27,9 +28,10 @@ public class AccountController {
     @PostMapping(value = "register")
     public String register(Model model,
                            HttpServletRequest request,
-                           @ModelAttribute(value = "new_user") FrontUser user) {
+                           @ModelAttribute(value = "new_user") FrontUser user
+    ) {
         UserConverter converter = new UserConverter();
-        Users theUser = service.createUser(converter.convertFrontUserToBackEndUser(user));
+        Users theUser = this.service.createUser(converter.convertFrontUserToBackEndUser(user));
         if(theUser == null) {
             model.addAttribute("error", new UserNotCreatedException());
             return "redirect:/error";
@@ -45,7 +47,7 @@ public class AccountController {
     public String login(Model model) {
         model.addAttribute("current_user", new FrontUser());
         model.addAttribute("new_user", new FrontUser());
-        return "Login";
+        return "login";
     }
 
     @PostMapping(value = "login/verify")

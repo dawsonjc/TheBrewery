@@ -7,67 +7,43 @@
         let pageNum = 0;
         const maxPage = <%= request.getAttribute("totalPages") %>;
 
-        function getPage(page, size) {
-            $.ajax({
-                url: `${pageContext.request.contextPath}/alcohol/get-beer-page?page=\${page}&size=\${size}`,
-                type: "GET",
-                dataType: "json"
-            }).then(function(data) {
-                let content = data.content;
-                let dataRow = 0;
-                let dataColumn = 0;
-                // tbody
-                $("#alcohol-tbody").children("tr").each(
-                    function() {
-                        if(content.length <= dataRow) {
-                            $(this).text("");
-                            return;
-                        }
-
-                        let dataIndex = 0;
-                        let values = Object.values(content[dataRow]);
-                        // row
-                        $(this).children().each(
-                            function(index) {
-                                let value = values[dataIndex++];
-                                switch(index) {
-                                    case 0:
-                                        let newTag = $("<a>");
-                                        newTag.attr("href", `${pageContext.request.contextPath}/alcohol-entity?id=\${value}`);
-                                        newTag.html("<i class=\"fa fa-beer fa-2x\"></i>")
-
-                                        $(this).append(newTag);
-                                        return;
-                                }
-
-                                // td
-                                $(this).text(value);
-                            }
-                        );
-                        dataColumn = 0;
-                        dataRow++;
-                    }
-                );
-            }).catch(function(error) {});
-        }
-
         function back() {
             if((pageNum - 1) < 0) {
                 return;
             }
 
-            getPage(pageNum--, 10)
+            switch(currentChoice) {
+                case AlcoholItem.BEER:
+                    dataObjects.beer.load(pageNum--);
+                    break;
+                case AlcoholItem.WHISKEY:
+                    dataObjects.whiskey.load(pageNum--);
+                    break;
+                case AlcoholItem.WINE:
+                    dataObjects.wine.load(pageNum--);
+                    break;
+            }
         }
 
         function next() {
-            if((pageNum + 1) > maxPage) {
+            if((pageNum + 1) >= maxPage) {
                 return;
             }
 
-            getPage(pageNum++, 10)
+            switch(currentChoice) {
+                case AlcoholItem.BEER:
+                    dataObjects.beer.load(pageNum++);
+                    break;
+                case AlcoholItem.WHISKEY:
+                    dataObjects.whiskey.load(pageNum++);
+                    break;
+                case AlcoholItem.WINE:
+                    dataObjects.wine.load(pageNum++);
+                    break;
+            }
         }
 
-        getPage(0, 10);
+        dataObjects.beer.load(pageNum);
     </script>
     <style type="text/css">
         .popover {

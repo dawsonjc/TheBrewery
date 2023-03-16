@@ -84,7 +84,7 @@ public class Beer implements AlcoholEntity {
         this.userId = userId;
     }
 
-    public ArrayList<Material> getBeerMaterials(BeerService service) {
+    public List<Material> getBeerMaterials(BeerService service) {
         return service.getAllMaterials(this.id);
     }
 
