@@ -1,18 +1,28 @@
-<%@ page import="tlcm.website.thebrewery.entities.users.FrontUser" %><%--
-  Created by IntelliJ IDEA.
-  User: Dawson
-  Date: 12/5/2022
-  Time: 7:04 PM
-  To change this template use File | Settings | File Templates.
---%>
+<%@ page import="tlcm.website.thebrewery.entities.users.Users" %>
+
+<%
+    Users user;
+    { // do not persist temp
+        Object temp;
+
+        // if the request is not there or the request is there but it is not an instance of Users
+        // send back home
+        // TODO: error page
+        if((temp = request.getSession().getAttribute("current_user")) == null || !(temp instanceof Users)) {
+            response.sendRedirect("/");
+            return;
+        }
+        user = (Users) temp;
+    }
+
+%>
+
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <% String title = "Account Information"; %>
 <%@ include file="header.jsp"%>
 <body>
-<%
-    FrontUser user = (FrontUser) request.getSession().getAttribute("current_user");
-%>
+
 
 <table>
     <tr></tr>

@@ -1,15 +1,17 @@
 // JQUERY DEPENDENT SCRIPT
+
+// potentially seek to lower the case
 const AlcoholItem = {
-    BEER: "BEER",
-    WINE: "WINE",
-    WHISKEY: "WHISKEY"
+    BEER: "beer",
+    WINE: "wine",
+    WHISKEY: "whiskey"
 };
 
 // TODO: We want to save this as a cookies maybe.
 //  So that when the user returns to page we can load what they wanted to
 //  Also will have to switch page number to be like this too (potentially)
 let currentChoice = AlcoholItem.BEER;
-
+let maxPage;
 /**
  * It might be pertinent to make this better.
  */
@@ -30,12 +32,17 @@ class AlcoholData {
             return false;
         }
 
-
         if(data.headers == null || data.body == null) {
             return false;
         }
 
-        return this.#loadHeaders(data.headers) && this.#loadBody(data.body.content);
+        // don't load new headers if current type persists
+        if(currentChoice !== this.type) {
+            this.#loadHeaders(data.headers)
+            maxPage = parseInt(data.body.totalPages);
+        }
+
+        this.#loadBody(data.body.content);
     }
 
     #loadHeaders(content) {
@@ -47,7 +54,7 @@ class AlcoholData {
                 $(this).text("");
                 return;
             }
-            let dataIndex = 1;
+            let dataIndex = 3;
             // row
             $(this).children().each(function(index) {
                 if(index === 0) {
@@ -109,9 +116,9 @@ class AlcoholData {
 }
 
 const dataObjects = {
-    beer: new AlcoholData(AlcoholItem.BEER.toLowerCase()),
-    wine: new AlcoholData(AlcoholItem.WINE.toLowerCase()),
-    whiskey: new AlcoholData(AlcoholItem.WHISKEY.toLowerCase())
+    beer: new AlcoholData(AlcoholItem.BEER),
+    wine: new AlcoholData(AlcoholItem.WINE),
+    whiskey: new AlcoholData(AlcoholItem.WHISKEY)
 };
 
 $(document).ready(function() {

@@ -5,9 +5,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import tlcm.website.thebrewery.entities.users.UserType;
 import tlcm.website.thebrewery.entities.users.Users;
-import tlcm.website.thebrewery.entities.users.FrontUser;
 import tlcm.website.thebrewery.repository.UsersRepository;
+
+import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.time.LocalDateTime;
 
 @Service
 public class UserService {
@@ -19,9 +24,18 @@ public class UserService {
     }
 
     public Users createUser(Users user) {
-        if(repo.findBackEndUserByUsername(user.getUsername()) == null) {
+        if(repo.findUserByUsername(user.getUsername()) != null) {
             return null;
         }
+
+        LocalDateTime d = LocalDateTime.now();
+        user = user.toBuilder()
+                .withCreateDate(d)
+                .withUpdateDate(d)
+                .withUserType(UserType.USER)
+                .withPassword(user.getPassword())
+                .build();
+
         return repo.save(user);
     }
 
@@ -30,24 +44,18 @@ public class UserService {
      * @param id the ID of the user
      * @return A user object of the id
      */
-    public Users readUserById(int id) {
-        return repo.getReferenceById((long) id);
+    public Users readUserById(BigInteger id) {
+        return repo.getReferenceById(id);
     }
 
-    public boolean userExists(FrontUser user) {
-        Users user1 = this.getDBUserByFrontEndUser(user);
+    public boolean userExists(Users user) {
+        Users user1 = this.getUserByUserNameAndPassword(user);
 
         return user1 != null;
     }
 
-    public Users getDBUserByFrontEndUser(FrontUser user) {
-        return this.repo.findBackEndUserByUsernameAndPassword(user.getUsername(), user.getPassword());
-    }
-
-    public Users updateUser(FrontUser newUser) {
-        tlcm.website.thebrewery.converter.
-                UserConverter converter = new tlcm.website.thebrewery.converter.UserConverter();
-        return this.updateUser(converter.convertFrontUserToBackEndUser(newUser));
+    public Users getUserByUserNameAndPassword(Users user) {
+        return this.repo.findUserByUsernameAndPassword(user.getUsername(), user.getPassword());
     }
 
     public Users updateUser(Users newUser) {
@@ -56,9 +64,12 @@ public class UserService {
             return null;
         }
 
+        // potential bug with null values [newUser has all fields are not null]
         Users updatedUser = existingUser.toBuilder()
+                .withUpdateDate(java.time.LocalDateTime.now())
                 .withFirstName(newUser.getFirstName())
                 .withLastName(newUser.getLastName())
+                .withEmail(newUser.getEmail())
                 .withUsername(newUser.getUsername())
                 .withPassword(newUser.getPassword())
                 .build();
@@ -66,7 +77,7 @@ public class UserService {
         return this.repo.save(updatedUser);
     }
 
-    public boolean deleteUser(FrontUser user) {
+    public boolean deleteUser(Users user) {
         return false;
     }
 

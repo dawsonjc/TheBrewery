@@ -4,3 +4,11 @@ function validPassword() {
     const sqlRegex = /[\\"'%;()&+/*=<>]/;
     return !sqlRegex.test(password);
 }
+
+function validateInformation() {
+
+}
+
+$(document).ready(function() {
+
+});

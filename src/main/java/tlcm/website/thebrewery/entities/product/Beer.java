@@ -5,8 +5,10 @@ import tlcm.website.thebrewery.entities.material.Material;
 import tlcm.website.thebrewery.services.BeerService;
 
 import javax.persistence.*;
-import java.util.ArrayList;
+import java.math.BigInteger;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Scanner;
 
 @Entity
 @Table(name = "beer")
@@ -14,25 +16,37 @@ public class Beer implements AlcoholEntity {
     @Id
     @GeneratedValue
     @Column(name = "id")
-    private int id;
+    private Integer id;
+
+    @Column(name="create_date")
+    private LocalDateTime createDate;
+
+    @Column(name="update_date")
+    private LocalDateTime updateDate;
+
     @Column(name = "name")
     private String name;
+
     @Column(name = "alcohol_content")
-    private float alcoholContent;
+    private Float alcoholContent;
+
     @Column(name = "color")
     private String color;
+
     @Column(name = "style")
     private String style;
-    @Column(name = "size")
-    private float size;
-    @Column(name = "user_id")
-    private int userId;
 
-    public int getId() {
+    @Column(name = "size")
+    private Float size;
+
+    @Column(name = "user_id")
+    private BigInteger userId;
+
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -44,11 +58,11 @@ public class Beer implements AlcoholEntity {
         this.name = name;
     }
 
-    public float getAlcoholContent() {
+    public Float getAlcoholContent() {
         return alcoholContent;
     }
 
-    public void setAlcoholContent(float alcoholContent) {
+    public void setAlcoholContent(Float alcoholContent) {
         this.alcoholContent = alcoholContent;
     }
 
@@ -68,24 +82,24 @@ public class Beer implements AlcoholEntity {
         this.style = style;
     }
 
-    public float getSize() {
+    public Float getSize() {
         return size;
     }
 
-    public void setSize(float size) {
+    public void setSize(Float size) {
         this.size = size;
     }
 
-    public int getUserId() {
+    public BigInteger getUserId() {
         return userId;
     }
 
-    public void setUserId(int userId) {
+    public void setUserId(BigInteger userId) {
         this.userId = userId;
     }
 
     public List<Material> getBeerMaterials(BeerService service) {
-        return service.getAllMaterials(this.id);
+        return service.getAllMaterials(BigInteger.valueOf((long) this.id));
     }
 
 

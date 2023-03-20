@@ -33,18 +33,21 @@
             </div>
             <div class="col-md-6">
                 <h3>Register</h3>
-                <form:form action="${pageContext.request.contextPath}/account/register" method="post" modelAttribute="new_user" onsubmit="return validPassword()">
+                <form:form action="${pageContext.request.contextPath}/account/register" method="post" modelAttribute="new_user" onsubmit="return validateInformation()">
+                    <form:label path="email">Email</form:label>
+                    <form:input path="email" type="text" placeholder="Email" />
+                    <br/>
+                    <form:label path="username">Username</form:label>
+                    <form:input path="username" type="text" placeholder="Username" />
+                    <br/>
+                    <form:label path="password">Password</form:label>
+                    <form:input path="password" type="password" />
+                    <br/>
                     <form:label path="firstName">First Name</form:label>
                     <form:input path="firstName" type="text" placeholder="First Name" />
                     <br/>
                     <form:label path="lastName">Last Name</form:label>
                     <form:input path="lastName" type="text" placeholder="Last Name" />
-                    <br/>
-                    <form:label path="username">Username</form:label>
-                    <form:input path="username" type="text" placeholder="username" />
-                    <br/>
-                    <form:label path="password">Password</form:label>
-                    <form:input path="password" type="password" />
                     <br/>
                     <form:button>submit</form:button>
                 </form:form>

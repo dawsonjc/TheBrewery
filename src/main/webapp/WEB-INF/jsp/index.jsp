@@ -5,7 +5,7 @@
 <body>
     <script type="text/javascript">
         let pageNum = 0;
-        const maxPage = <%= request.getAttribute("totalPages") %>;
+        maxPage = <%= request.getAttribute("totalPages") %>;
 
         function back() {
             if((pageNum - 1) < 0) {

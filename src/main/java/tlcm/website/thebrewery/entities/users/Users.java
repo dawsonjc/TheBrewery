@@ -1,6 +1,10 @@
 package tlcm.website.thebrewery.entities.users;
 
 import javax.persistence.*;
+import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "users")
@@ -8,7 +12,13 @@ public class Users {
     @Id
     @GeneratedValue
     @Column(name="id")
-    private Integer id;
+    private BigInteger id;
+
+    @Column(name="create_date")
+    private LocalDateTime createDate;
+
+    @Column(name="update_date")
+    private LocalDateTime updateDate;
 
     @Column(name="user_type")
     @Enumerated(EnumType.ORDINAL)
@@ -19,6 +29,9 @@ public class Users {
 
     @Column(name="last_name")
     private String lastName;
+
+    @Column(name="email")
+    private String email;
 
     @Column(name="username")
     private String username;
@@ -33,9 +46,12 @@ public class Users {
     public Builder toBuilder() {
         return new Builder()
                 .withId(this.id)
+                .withCreateDate(this.createDate)
+                .withUpdateDate(this.updateDate)
                 .withUserType(this.type)
                 .withFirstName(this.firstName)
                 .withLastName(this.lastName)
+                .withEmail(this.email)
                 .withUsername(this.username)
                 .withPassword(this.password);
     }
@@ -44,16 +60,32 @@ public class Users {
         return this.type;
     }
 
-    public int getId() {
+    public BigInteger getId() {
         return this.id;
     }
 
     @Deprecated
-    public void setId(int id) {
+    public void setId(BigInteger id) {
         if(this.id != null) {
             return;
         }
         this.id = id;
+    }
+
+    public LocalDateTime getCreateDate() {
+        return createDate;
+    }
+
+    public void setCreateDate(LocalDateTime createDate) {
+        this.createDate = createDate;
+    }
+
+    public LocalDateTime getUpdateDate() {
+        return updateDate;
+    }
+
+    public void setUpdateDate(LocalDateTime updateDate) {
+        this.updateDate = updateDate;
     }
 
     /**
@@ -89,6 +121,14 @@ public class Users {
         this.lastName = lastName;
     }
 
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
     public String getUsername() {
         return this.username;
     }
@@ -104,11 +144,27 @@ public class Users {
         return this.password;
     }
 
+    // NEED TO UPDATE! UNSAFE AS FUCK!
     public void setPassword(String password) {
         if(this.password != null) {
             return;
         }
-        this.password = password;
+
+        try {
+            MessageDigest messageDigest = MessageDigest.getInstance("MD5");
+
+            messageDigest.update(password.getBytes());
+
+            byte[] bytes = messageDigest.digest();
+
+            StringBuilder sb = new StringBuilder();
+
+            for(byte aByte : bytes) {
+                sb.append(Integer.toString((aByte & 0xff) + 0x100, 16).substring(1));
+            }
+
+            this.password = sb.toString();
+        } catch(NoSuchAlgorithmException ignore) {}
     }
 
     @Override
@@ -130,11 +186,6 @@ public class Users {
         return true;
     }
 
-    @Override
-    public int hashCode() {
-        return this.id;
-    }
-
     public String toJavascriptObject() {
         return "{ " +
                 "type:" + this.type +
@@ -147,33 +198,49 @@ public class Users {
 
     @Override
     public String toString() {
-        return "BackEndUser{" +
+        return "Users{" +
                 "id=" + id +
+                ", createDate=" + createDate +
+                ", updateDate=" + updateDate +
                 ", type=" + type +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
+                ", email='" + email + '\'' +
                 ", username='" + username + '\'' +
                 ", password='" + password + '\'' +
                 '}';
     }
 
     public static class Builder {
+        private BigInteger id;
+        private LocalDateTime createDate;
+        private LocalDateTime updateDate;
         private UserType userType;
-        private int id;
         private String firstName;
         private String lastName;
+        private String email;
         private String username;
         private String password;
 
         private Builder() {}
 
-        public Builder withUserType(UserType userType) {
-            this.userType = userType;
+        public Builder withId(BigInteger id) {
+            this.id = id;
             return this;
         }
 
-        public Builder withId(int id) {
-            this.id = id;
+        public Builder withCreateDate(LocalDateTime createDate) {
+            this.createDate = createDate;
+            return this;
+        }
+
+        public Builder withUpdateDate(LocalDateTime updateDate) {
+            this.updateDate = updateDate;
+            return this;
+        }
+
+        public Builder withUserType(UserType userType) {
+            this.userType = userType;
             return this;
         }
 
@@ -184,6 +251,11 @@ public class Users {
 
         public Builder withLastName(String lastName) {
             this.lastName = lastName;
+            return this;
+        }
+
+        public Builder withEmail(String email) {
+            this.email = email;
             return this;
         }
 
@@ -199,10 +271,13 @@ public class Users {
 
         public Users build() {
             Users user = new Users();
-            user.type = this.userType;
             user.id = this.id;
+            user.createDate = this.createDate;
+            user.updateDate = this.updateDate;
+            user.type = this.userType;
             user.firstName = this.firstName;
             user.lastName = this.lastName;
+            user.email = this.email;
             user.username = this.username;
             user.password = this.password;
 
