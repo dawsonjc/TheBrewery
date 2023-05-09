@@ -27,6 +27,10 @@ public class AccountController {
                            HttpServletRequest request,
                            @ModelAttribute(value = "new_user") Users user
     ) {
+        user = user.toBuilder()
+                .withPassword(Users.encryptPassword(user.getPassword()))
+                .build();
+
         Users theUser = this.service.createUser(user);
         if(theUser == null) {
             model.addAttribute("error", new UserNotCreatedException());

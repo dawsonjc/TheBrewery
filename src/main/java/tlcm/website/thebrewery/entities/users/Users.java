@@ -1,18 +1,23 @@
 package tlcm.website.thebrewery.entities.users;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
+
 import javax.persistence.*;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Entity
 @Table(name = "users")
+@JsonDeserialize(builder = Users.Builder.class)
 public class Users {
     @Id
     @GeneratedValue
     @Column(name="id")
-    private BigInteger id;
+    private UUID id;
 
     @Column(name="create_date")
     private LocalDateTime createDate;
@@ -56,100 +61,44 @@ public class Users {
                 .withPassword(this.password);
     }
 
-    public UserType getType() {
-        return this.type;
-    }
-
-    public BigInteger getId() {
-        return this.id;
-    }
-
-    @Deprecated
-    public void setId(BigInteger id) {
-        if(this.id != null) {
-            return;
-        }
-        this.id = id;
+    public UUID getId() {
+        return id;
     }
 
     public LocalDateTime getCreateDate() {
         return createDate;
     }
 
-    public void setCreateDate(LocalDateTime createDate) {
-        this.createDate = createDate;
-    }
-
     public LocalDateTime getUpdateDate() {
         return updateDate;
     }
 
-    public void setUpdateDate(LocalDateTime updateDate) {
-        this.updateDate = updateDate;
-    }
-
-    /**
-     * Note: can only be used once
-     * @param type User Type (admin, user)
-     */
-    public void setType(UserType type) {
-        if(this.type != null) {
-            return;
-        }
-        this.type = type;
+    public UserType getType() {
+        return type;
     }
 
     public String getFirstName() {
-        return this.firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        if(this.firstName != null) {
-            return;
-        }
-        this.firstName = firstName;
+        return firstName;
     }
 
     public String getLastName() {
-        return this.lastName;
-    }
-
-    public void setLastName(String lastName) {
-        if(this.lastName != null) {
-            return;
-        }
-        this.lastName = lastName;
+        return lastName;
     }
 
     public String getEmail() {
         return email;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
     public String getUsername() {
-        return this.username;
-    }
-
-    public void setUsername(String username) {
-        if(this.username != null) {
-            return;
-        }
-        this.username = username;
+        return username;
     }
 
     public String getPassword() {
-        return this.password;
+        return password;
     }
 
     // NEED TO UPDATE! UNSAFE AS FUCK!
-    public void setPassword(String password) {
-        if(this.password != null) {
-            return;
-        }
-
+    public static String encryptPassword(String password) {
         try {
             MessageDigest messageDigest = MessageDigest.getInstance("MD5");
 
@@ -163,8 +112,10 @@ public class Users {
                 sb.append(Integer.toString((aByte & 0xff) + 0x100, 16).substring(1));
             }
 
-            this.password = sb.toString();
+            return sb.toString();
         } catch(NoSuchAlgorithmException ignore) {}
+
+        return null;
     }
 
     @Override
@@ -211,8 +162,9 @@ public class Users {
                 '}';
     }
 
+    @JsonPOJOBuilder
     public static class Builder {
-        private BigInteger id;
+        private UUID id;
         private LocalDateTime createDate;
         private LocalDateTime updateDate;
         private UserType userType;
@@ -224,7 +176,7 @@ public class Users {
 
         private Builder() {}
 
-        public Builder withId(BigInteger id) {
+        public Builder withId(UUID id) {
             this.id = id;
             return this;
         }

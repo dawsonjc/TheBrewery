@@ -1,6 +1,5 @@
 package tlcm.website.thebrewery.controllers;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -13,7 +12,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.view.RedirectView;
 import tlcm.website.thebrewery.services.BeerService;
+
+import java.math.BigInteger;
 
 
 @Controller
@@ -53,17 +55,18 @@ public class AlcoholEntityController {
             case "wine":
                 break;
             default:
-                jsonResponse.put("response", "400");
+                jsonResponse.put("responxse", "400");
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(jsonResponse);
         }
         return ResponseEntity.ok(jsonResponse);
     }
 
+
     @GetMapping(value = "{productType}/alcohol-entity")
     public String alcoholEntity(
             Model model,
             @PathVariable(value = "productType") String productType,
-            @RequestParam(value = "id") int alcoholId
+            @RequestParam(value = "id") BigInteger alcoholId
     ) {
 
         switch(productType) {
@@ -75,6 +78,9 @@ public class AlcoholEntityController {
             case "wine":
                 return "alcohol/wine";
         }
+
+        RedirectView e = new RedirectView();
+
 
         return "redirect:/";
     }

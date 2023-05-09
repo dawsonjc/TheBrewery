@@ -1,5 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ page import="tlcm.website.thebrewery.entities.product.Beer" %>
+<%@ page import="tlcm.website.thebrewery.entities.product.alcohol.Beer" %>
 
 <%
     Beer entity = null;
