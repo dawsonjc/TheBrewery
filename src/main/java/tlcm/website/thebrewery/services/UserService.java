@@ -13,6 +13,7 @@ import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Service
 public class UserService {
@@ -44,7 +45,7 @@ public class UserService {
      * @param id the ID of the user
      * @return A user object of the id
      */
-    public Users readUserById(BigInteger id) {
+    public Users getUserById(UUID id) {
         return repo.getReferenceById(id);
     }
 
@@ -59,14 +60,14 @@ public class UserService {
     }
 
     public Users updateUser(Users newUser) {
-        Users existingUser = this.readUserById(newUser.getId());
+        Users existingUser = this.getUserById(newUser.getId());
         if(existingUser == null) {
             return null;
         }
 
         // potential bug with null values [newUser has all fields are not null]
         Users updatedUser = existingUser.toBuilder()
-                .withUpdateDate(java.time.LocalDateTime.now())
+                .withUpdateDate(LocalDateTime.now())
                 .withFirstName(newUser.getFirstName())
                 .withLastName(newUser.getLastName())
                 .withEmail(newUser.getEmail())
@@ -76,6 +77,11 @@ public class UserService {
 
         return this.repo.save(updatedUser);
     }
+
+    public String getUsernameById(UUID id) {
+        return this.getUserById(id).getUsername();
+    }
+
 
     public boolean deleteUser(Users user) {
         return false;

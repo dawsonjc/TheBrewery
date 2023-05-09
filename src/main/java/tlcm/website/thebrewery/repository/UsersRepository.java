@@ -7,9 +7,10 @@ import org.springframework.stereotype.Repository;
 import tlcm.website.thebrewery.entities.users.Users;
 
 import java.math.BigInteger;
+import java.util.UUID;
 
 @Repository
-public interface UsersRepository extends JpaRepository<Users, BigInteger> {
+public interface UsersRepository extends JpaRepository<Users, UUID> {
 
     @Query(value = "SELECT user FROM Users user WHERE user.username = :username")
     public Users findUserByUsername(@Param(value = "username") String username);
@@ -17,5 +18,7 @@ public interface UsersRepository extends JpaRepository<Users, BigInteger> {
     @Query(value = "SELECT user FROM Users user WHERE user.username = :username AND user.password = :password")
     public Users findUserByUsernameAndPassword(@Param(value = "username") String username,
                                                @Param(value = "password") String password);
+
+
 
 }

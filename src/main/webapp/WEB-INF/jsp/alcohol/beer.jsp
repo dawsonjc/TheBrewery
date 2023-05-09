@@ -12,6 +12,7 @@
 
         entity = (Beer) temp;
     }
+    String createdBy = (String) request.getAttribute("created-by");
 
 %>
 
@@ -20,8 +21,9 @@
 <%@ include file="../header.jsp" %>
 <body>
 
+<table></table>
 
-
+<table></table>
 </body>
 <%@ include file="../footer.jsp" %>
 </html>

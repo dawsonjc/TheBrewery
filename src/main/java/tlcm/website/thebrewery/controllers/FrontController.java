@@ -23,6 +23,8 @@ public class FrontController {
         return "index";
     }
 
+
+
     @GetMapping(value = "/admin")
     public String admin() {
         return "admin";
