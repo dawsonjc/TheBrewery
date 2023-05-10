@@ -43,6 +43,8 @@ class AlcoholData {
         }
 
         this.#loadBody(data.body.content);
+
+        return true;
     }
 
     #loadHeaders(content) {
@@ -62,11 +64,11 @@ class AlcoholData {
                     return;
                 }
 
-                let value = content[dataIndex++].split("_")
+                let value = content[dataIndex++].split('_')
                     .map((word) => {
                         return word.charAt(0).toUpperCase() + word.substring(1);
                     })
-                    .join(" ");
+                    .join(' ');
 
                 // td
                 $(this).text(value);

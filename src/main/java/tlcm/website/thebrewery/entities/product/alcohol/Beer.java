@@ -14,11 +14,10 @@ import java.util.UUID;
 @Entity
 @Table(name = "beer")
 @JsonDeserialize(builder = Beer.Builder.class)
-public class Beer extends AlcoholEntity<Beer.Builder> {
+public class Beer extends AbstractAlcoholEntity<Beer.Builder> {
 
     @Column(name = "color")
     private String color;
-
 
     public static Builder builder() {
         return new Builder();
@@ -41,7 +40,6 @@ public class Beer extends AlcoholEntity<Beer.Builder> {
     public List<Material> getBeerMaterials(BeerService service) {
         return service.getAllMaterials(this.id);
     }
-
 
     @Override
     public String toString() {

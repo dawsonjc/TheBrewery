@@ -1,5 +1,6 @@
 package tlcm.website.thebrewery.entities.users;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 
@@ -7,6 +8,8 @@ import javax.persistence.*;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
+import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -44,6 +47,9 @@ public class Users {
     @Column(name="password")
     private String password;
 
+    @Column(name = "password_salt")
+    private String passwordSalt;
+
     public static Builder builder() {
         return new Builder();
     }
@@ -58,7 +64,8 @@ public class Users {
                 .withLastName(this.lastName)
                 .withEmail(this.email)
                 .withUsername(this.username)
-                .withPassword(this.password);
+                .withPassword(this.password)
+                .withPasswordSalt(this.passwordSalt);
     }
 
     public UUID getId() {
@@ -77,14 +84,17 @@ public class Users {
         return type;
     }
 
+    @JsonIgnore
     public String getFirstName() {
         return firstName;
     }
 
+    @JsonIgnore
     public String getLastName() {
         return lastName;
     }
 
+    @JsonIgnore
     public String getEmail() {
         return email;
     }
@@ -93,29 +103,39 @@ public class Users {
         return username;
     }
 
+    @JsonIgnore
     public String getPassword() {
         return password;
     }
 
-    // NEED TO UPDATE! UNSAFE AS FUCK!
-    public static String encryptPassword(String password) {
+    @JsonIgnore
+    public String getPasswordSalt() {
+        return this.passwordSalt;
+    }
+
+    public static String getSalt() {
         try {
-            MessageDigest messageDigest = MessageDigest.getInstance("MD5");
-
-            messageDigest.update(password.getBytes());
-
-            byte[] bytes = messageDigest.digest();
-
-            StringBuilder sb = new StringBuilder();
-
-            for(byte aByte : bytes) {
-                sb.append(Integer.toString((aByte & 0xff) + 0x100, 16).substring(1));
-            }
-
-            return sb.toString();
-        } catch(NoSuchAlgorithmException ignore) {}
-
+            SecureRandom sr = SecureRandom.getInstance("SHA1PRNG", "SUN");
+            byte[] salt = new byte[16];
+            sr.nextBytes(salt);
+            return salt.toString();
+        } catch(NoSuchAlgorithmException | NoSuchProviderException ignore) {}
         return null;
+    }
+
+    public static String encryptPassword(String password, String salt) {
+        String hashedPass = null;
+        try {
+            MessageDigest md = MessageDigest.getInstance("MD5");
+            md.update(salt.getBytes());
+            byte[] bytes = md.digest(password.getBytes());
+            StringBuffer sb = new StringBuffer();
+            for(int i = 0; i < bytes.length; i++) {
+                sb.append(Integer.toString((bytes[i] & 0xff) + 0x100, 16).substring(1));
+            }
+            hashedPass = sb.toString();
+        } catch(Exception ignore) {}
+        return hashedPass;
     }
 
     @Override
@@ -173,6 +193,7 @@ public class Users {
         private String email;
         private String username;
         private String password;
+        private String passwordSalt;
 
         private Builder() {}
 
@@ -221,6 +242,11 @@ public class Users {
             return this;
         }
 
+        public Builder withPasswordSalt(String passwordSalt) {
+            this.passwordSalt = passwordSalt;
+            return this;
+        }
+
         public Users build() {
             Users user = new Users();
             user.id = this.id;
@@ -232,6 +258,7 @@ public class Users {
             user.email = this.email;
             user.username = this.username;
             user.password = this.password;
+            user.passwordSalt = this.passwordSalt;
 
             return user;
         }

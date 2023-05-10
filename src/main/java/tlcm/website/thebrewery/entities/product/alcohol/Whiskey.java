@@ -9,7 +9,7 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "whiskey")
 @JsonDeserialize(builder = Whiskey.Builder.class)
-public class Whiskey extends AlcoholEntity<Whiskey.Builder> {
+public class Whiskey extends AbstractAlcoholEntity<Whiskey.Builder> {
 
 
 

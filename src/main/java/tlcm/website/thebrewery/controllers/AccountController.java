@@ -27,8 +27,11 @@ public class AccountController {
                            HttpServletRequest request,
                            @ModelAttribute(value = "new_user") Users user
     ) {
+        String salt = Users.getSalt();
+        
         user = user.toBuilder()
-                .withPassword(Users.encryptPassword(user.getPassword()))
+                .withPasswordSalt(salt)
+                .withPassword(Users.encryptPassword(user.getPassword(), salt))
                 .build();
 
         Users theUser = this.service.createUser(user);
@@ -48,14 +51,20 @@ public class AccountController {
         return "login";
     }
 
-    @PostMapping(value = "login/verify")
+    @PostMapping(value = "login")
     public String loginVerify(HttpServletRequest request,
                               @ModelAttribute(value = "current_user") Users userToLogin) {
-        if(!this.service.userExists(userToLogin)) {
+
+        Users user = this.service.getUserbyUsername(userToLogin.getUsername());
+
+        String encryptedUserToLoginPassword = Users.encryptPassword(userToLogin.getPassword(), user.getPasswordSalt());
+
+        // the passwords do not match
+        if(!user.getPassword().equals(encryptedUserToLoginPassword)) {
             return "redirect:/account/login?result=false";
         }
-        Users currentUser = this.service.getUserByUserNameAndPassword(userToLogin);
-        request.getSession().setAttribute("current_user", currentUser);
+
+        request.getSession().setAttribute("current_user", user);
 
         return "redirect:/";
     }

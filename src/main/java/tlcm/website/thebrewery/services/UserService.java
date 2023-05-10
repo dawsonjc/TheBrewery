@@ -1,17 +1,10 @@
 package tlcm.website.thebrewery.services;
 
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import tlcm.website.thebrewery.entities.users.UserType;
 import tlcm.website.thebrewery.entities.users.Users;
 import tlcm.website.thebrewery.repository.UsersRepository;
 
-import java.math.BigInteger;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -49,14 +42,8 @@ public class UserService {
         return repo.getReferenceById(id);
     }
 
-    public boolean userExists(Users user) {
-        Users user1 = this.getUserByUserNameAndPassword(user);
-
-        return user1 != null;
-    }
-
-    public Users getUserByUserNameAndPassword(Users user) {
-        return this.repo.findUserByUsernameAndPassword(user.getUsername(), user.getPassword());
+    public Users getUserbyUsername(String username) {
+        return this.repo.findUserByUsername(username);
     }
 
     public Users updateUser(Users newUser) {
@@ -65,6 +52,9 @@ public class UserService {
             return null;
         }
 
+        String currentPassword = existingUser.getPassword();
+        String potentialPassword = Users.encryptPassword(newUser.getPassword(), existingUser.getPasswordSalt());
+
         // potential bug with null values [newUser has all fields are not null]
         Users updatedUser = existingUser.toBuilder()
                 .withUpdateDate(LocalDateTime.now())
@@ -72,7 +62,10 @@ public class UserService {
                 .withLastName(newUser.getLastName())
                 .withEmail(newUser.getEmail())
                 .withUsername(newUser.getUsername())
-                .withPassword(newUser.getPassword())
+                .withPassword(
+                        // does the current password equal the inputed password?
+                        !currentPassword.equals(potentialPassword) ? potentialPassword : existingUser.getPassword()
+                )
                 .build();
 
         return this.repo.save(updatedUser);
@@ -86,9 +79,4 @@ public class UserService {
     public boolean deleteUser(Users user) {
         return false;
     }
-
-    public Page<Users> findAllUsers(Pageable pageable) {
-        return this.repo.findAll(pageable);
-    }
-
 }

@@ -1,41 +1,38 @@
 package tlcm.website.thebrewery.entities.product.alcohol;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.math.BigInteger;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-@Entity
-public abstract class AlcoholEntity<BUILDER> {
+@MappedSuperclass
+public abstract class AbstractAlcoholEntity<BUILDER> {
 
     @Id
     @GeneratedValue
     @Column(name = "id")
-    protected BigInteger id;
+    BigInteger id;
 
     @Column(name="create_date")
-    protected LocalDateTime createDate;
+    LocalDateTime createDate;
 
     @Column(name="update_date")
-    protected LocalDateTime updateDate;
+    LocalDateTime updateDate;
 
     @Column(name = "name")
-    protected String name;
+    String name;
 
     @Column(name = "alcohol_content")
-    protected Float alcoholContent;
+    Float alcoholContent;
 
     @Column(name = "style")
-    protected String style;
+    String style;
 
     @Column(name = "size")
-    protected Float size;
+    Float size;
 
     @Column(name = "user_id")
-    protected UUID userId;
+    UUID userId;
 
     public BigInteger getId() {
         return id;
