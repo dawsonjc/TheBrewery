@@ -1,0 +1,28 @@
+@startuml
+'https://plantuml.com/class-diagram
+
+abstract class AbstractAlcoholEntity<BUILDER> {
+    ~ id: BigInteger
+    ~ createDate: LocalDateTime
+    ~ updateDate: LocalDateTime
+    ~ name: String
+    ~ alcoholContent: Float
+    ~ style: String
+    ~ size: Float
+    ~ userId: UUID
+
+    ~ builder(): BUILDER
+}
+
+class Beer {
+    - color: String
+}
+class Whiskey {}
+class Wine {}
+
+AbstractAlcoholEntity <|-- Beer
+AbstractAlcoholEntity<|-- Whiskey
+AbstractAlcoholEntity <|-- Wine
+
+
+@enduml

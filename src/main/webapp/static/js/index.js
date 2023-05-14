@@ -49,15 +49,15 @@ class AlcoholData {
 
     #loadHeaders(content) {
         let dataRow = 0;
-        let dataColumn = 0;
-        // head
+
+        // for each row in head (only 1)
         $("#alcohol-thead").children("tr").each(function() {
             if(content.length <= dataRow) {
                 $(this).text("");
                 return;
             }
             let dataIndex = 3;
-            // row
+            // for each column in row
             $(this).children().each(function(index) {
                 if(index === 0) {
                     $(this).text("Link");
@@ -73,7 +73,6 @@ class AlcoholData {
                 // td
                 $(this).text(value);
             });
-            dataColumn = 0;
             dataRow++;
         });
 
@@ -83,23 +82,21 @@ class AlcoholData {
     #loadBody(content) {
         const self = this;
         let dataRow = 0;
-        let dataColumn = 0;
-        // tbody
+        // for each row in the body
         $("#alcohol-tbody").children("tr").each(function() {
             if(content.length <= dataRow) {
                 $(this).text("");
                 return;
             }
 
-            let dataIndex = 0;
-            let values = Object.values(content[dataRow]);
-            // row
-            $(this).children().each(function(index) {
-                let value = values[dataIndex++];
-                switch(index) {
+            let values = Object.values(content[dataRow]); // get the values for the row
+            // for each column in row
+            $(this).children().each(function(columnIndex) {
+                let value = values[columnIndex];
+                switch(columnIndex) {
                     case 0:
                         let newTag = $("<a>");
-                        newTag.attr("href", `${contextPath}/${self.type}/alcohol-entity?id=${value}`);
+                        newTag.attr("href", `${contextPath}/${self.type}/?id=${value}`);
                         newTag.html(`<i class="fa fa-${self.type} fa-2x"></i>`)
 
                         $(this).html(newTag);
@@ -109,7 +106,6 @@ class AlcoholData {
                 // td
                 $(this).text(value);
             });
-            dataColumn = 0;
             dataRow++;
         });
 

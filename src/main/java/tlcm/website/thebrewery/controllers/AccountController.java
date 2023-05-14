@@ -11,18 +11,18 @@ import tlcm.website.thebrewery.services.UserService;
 import javax.servlet.http.HttpServletRequest;
 
 @Controller
-@RequestMapping(value = "account")
+@RequestMapping(value = { "account" })
 public class AccountController {
 
     @Autowired
     private UserService service;
 
-    @GetMapping(value = "")
+    @GetMapping(value = { "" })
     public String account() {
         return "account";
     }
 
-    @PostMapping(value = "register")
+    @PostMapping(value = { "register" })
     public String register(Model model,
                            HttpServletRequest request,
                            @ModelAttribute(value = "new_user") Users user
@@ -44,14 +44,14 @@ public class AccountController {
         return "redirect:/";
     }
 
-    @RequestMapping(value = "login")
+    @RequestMapping(value = { "login" })
     public String login(Model model) {
         model.addAttribute("current_user", new Users());
         model.addAttribute("new_user", new Users());
         return "login";
     }
 
-    @PostMapping(value = "login")
+    @PostMapping(value = { "login" })
     public String loginVerify(HttpServletRequest request,
                               @ModelAttribute(value = "current_user") Users userToLogin) {
 

@@ -3,7 +3,7 @@
 
 <%
     Object temp;
-    if((temp = request.getAttribute("alcohol_entity")) == null || !(temp instanceof Whiskey)) {
+    if((temp = request.getAttribute("alcohol-entity")) == null || !(temp instanceof Whiskey)) {
         response.sendRedirect("/");
         return;
     }

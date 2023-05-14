@@ -10,12 +10,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.view.RedirectView;
-import tlcm.website.thebrewery.services.BeerService;
-
-import java.math.BigInteger;
+import tlcm.website.thebrewery.services.alcohol.BeerService;
 
 
 @Controller
@@ -55,33 +51,9 @@ public class AlcoholEntityController {
             case "wine":
                 break;
             default:
-                jsonResponse.put("responxse", "400");
+                jsonResponse.put("response", "400");
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(jsonResponse);
         }
         return ResponseEntity.ok(jsonResponse);
-    }
-
-
-    @GetMapping(value = "{productType}/alcohol-entity")
-    public String alcoholEntity(
-            Model model,
-            @PathVariable(value = "productType") String productType,
-            @RequestParam(value = "id") BigInteger alcoholId
-    ) {
-
-        switch(productType) {
-            case "beer":
-                model.addAttribute("alcohol_entity", this.service.getBeerById(alcoholId));
-                return "alcohol/beer";
-            case "whiskey":
-                return "alcohol/whiskey";
-            case "wine":
-                return "alcohol/wine";
-        }
-
-        RedirectView e = new RedirectView();
-
-
-        return "redirect:/";
     }
 }

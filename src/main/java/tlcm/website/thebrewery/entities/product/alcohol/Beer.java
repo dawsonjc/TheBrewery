@@ -3,7 +3,7 @@ package tlcm.website.thebrewery.entities.product.alcohol;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import tlcm.website.thebrewery.entities.material.Material;
-import tlcm.website.thebrewery.services.BeerService;
+import tlcm.website.thebrewery.services.alcohol.BeerService;
 
 import javax.persistence.*;
 import java.math.BigInteger;
@@ -19,12 +19,12 @@ public class Beer extends AbstractAlcoholEntity<Beer.Builder> {
     @Column(name = "color")
     private String color;
 
-    public static Builder builder() {
+    public static Beer.Builder builder() {
         return new Builder();
     }
 
     @Override
-    public Builder toBuilder() {
+    public Beer.Builder toBuilder() {
         return new Builder()
                 .withId(this.id)
                 .withCreateDate(this.createDate)
@@ -37,8 +37,8 @@ public class Beer extends AbstractAlcoholEntity<Beer.Builder> {
                 .withColor(this.color);
     }
 
-    public List<Material> getBeerMaterials(BeerService service) {
-        return service.getAllMaterials(this.id);
+    public List<Material> getBeerMaterialsById(BeerService service) {
+        return service.getAllMaterialsById(this.id);
     }
 
     @Override
@@ -68,12 +68,12 @@ public class Beer extends AbstractAlcoholEntity<Beer.Builder> {
 
         private Builder() {}
 
-        public Builder withId(BigInteger id) {
+        public Beer.Builder withId(BigInteger id) {
             this.id = id;
             return this;
         }
 
-        public Builder withCreateDate(LocalDateTime createDate) {
+        public Beer.Builder withCreateDate(LocalDateTime createDate) {
             if(this.createDate == null) {
                 this.createDate = createDate;
             }
@@ -81,37 +81,37 @@ public class Beer extends AbstractAlcoholEntity<Beer.Builder> {
             return this;
         }
 
-        public Builder withUpdateDate(LocalDateTime updateDate) {
+        public Beer.Builder withUpdateDate(LocalDateTime updateDate) {
             this.updateDate = updateDate;
             return this;
         }
 
-        public Builder withName(String name) {
+        public Beer.Builder withName(String name) {
             this.name = name;
             return this;
         }
 
-        public Builder withAlcoholContent(Float alcoholContent) {
+        public Beer.Builder withAlcoholContent(Float alcoholContent) {
             this.alcoholContent = alcoholContent;
             return this;
         }
 
-        public Builder withStyle(String style) {
+        public Beer.Builder withStyle(String style) {
             this.style = style;
             return this;
         }
 
-        public Builder withSize(Float size) {
+        public Beer.Builder withSize(Float size) {
             this.size = size;
             return this;
         }
 
-        public Builder withUserId(UUID userId) {
+        public Beer.Builder withUserId(UUID userId) {
             this.userId = userId;
             return this;
         }
 
-        public Builder withColor(String color) {
+        public Beer.Builder withColor(String color) {
             this.color = color;
             return this;
         }

@@ -7,25 +7,23 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import tlcm.website.thebrewery.services.BeerService;
+import tlcm.website.thebrewery.services.alcohol.BeerService;
 
 @Controller
-@RequestMapping(value = "/")
+@RequestMapping(value = { "/" })
 public class FrontController {
 
     @Autowired
     private BeerService service;
 
-    @RequestMapping(value = "")
+    @RequestMapping(value = { "" })
     public String index(Model model) {
         int totalPages = service.findAllBeer(PageRequest.of(1, 10, Sort.by("id"))).getTotalPages();
         model.addAttribute("totalPages", totalPages);
         return "index";
     }
 
-
-
-    @GetMapping(value = "/admin")
+    @GetMapping(value = { "/admin" })
     public String admin() {
         return "admin";
     }

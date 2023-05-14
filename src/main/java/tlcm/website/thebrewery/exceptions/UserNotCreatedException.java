@@ -1,7 +1,7 @@
 package tlcm.website.thebrewery.exceptions;
 
 public class UserNotCreatedException extends RuntimeException {
-    static final long serialVersionUID = 2540520574437753309L;
+    private static final long serialVersionUID = 2540520574437753309L;
 
     @Override
     public String toString() {

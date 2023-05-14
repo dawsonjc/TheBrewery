@@ -5,9 +5,8 @@ function validPassword() {
     return !sqlRegex.test(password);
 }
 
-function validateInformation() {
+function validateInformation() { return 3; }
 
-}
 
 $(document).ready(function() {
 
