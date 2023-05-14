@@ -18,8 +18,8 @@ public class WhiskeyController {
     private WhiskeyService whiskeyService;
 
     @GetMapping(value = { "" })
-    public String page(@RequestParam(value = "id") BigInteger id,
-                       Model model
+    public String whiskeyView(@RequestParam(value = "id") BigInteger id,
+                              Model model
     ) {
         model.addAttribute("alcohol-entity", this.whiskeyService.getWhiskeyById(id));
 

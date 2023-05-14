@@ -6,8 +6,7 @@ import org.springframework.stereotype.Service;
 import tlcm.website.thebrewery.entities.material.Material;
 import tlcm.website.thebrewery.entities.product.alcohol.Beer;
 import tlcm.website.thebrewery.exceptions.AlcoholEntityNotFoundException;
-import tlcm.website.thebrewery.repository.BeerRepository;
-import tlcm.website.thebrewery.repository.MaterialRepository;
+import tlcm.website.thebrewery.repository.alcohol.BeerRepository;
 import tlcm.website.thebrewery.services.MaterialService;
 
 import java.math.BigInteger;
@@ -38,9 +37,5 @@ public class BeerService {
 
     public List<Material> getAllMaterialsById(BigInteger id) {
         return this.materialService.findAllByAlcoholId(id);
-    }
-
-    public List<String> getTableColumns() {
-        return this.beerRepo.getColumns();
     }
 }

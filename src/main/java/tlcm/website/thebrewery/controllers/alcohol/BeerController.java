@@ -28,15 +28,14 @@ public class BeerController {
 
     // load
     @GetMapping(value = { "" })
-    public String getBeerByIdPage(
-                            @RequestParam(value = "id") BigInteger id,
-                            Model model
+    public String beerView(@RequestParam(value = "id") BigInteger id,
+                           Model model
     ) {
         Beer beer = this.beerService.getBeerById(id);
-        model.addAttribute("created-by", userService.getUsernameById(beer.getUserId()));
+        model.addAttribute("created-by", this.userService.getUsernameById(beer.getUserId()));
         model.addAttribute("alcohol-entity", beer);
 
-        return "beer";
+        return "alcohol/beer";
     }
 
     @ResponseBody

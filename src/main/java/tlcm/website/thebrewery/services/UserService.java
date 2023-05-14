@@ -55,7 +55,7 @@ public class UserService {
         String currentPassword = existingUser.getPassword();
         String potentialPassword = Users.encryptPassword(newUser.getPassword(), existingUser.getPasswordSalt());
 
-        // potential bug with null values [newUser has all fields are not null]
+        // FIXME: Bug with null values [newUser has all fields are not null]
         Users updatedUser = existingUser.toBuilder()
                 .withUpdateDate(LocalDateTime.now())
                 .withFirstName(newUser.getFirstName())
